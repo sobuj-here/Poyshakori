@@ -75,13 +75,11 @@ Poyshakori is currently under development. Features, design, and implementation 
 
 ## 📥 Download
 
-The public APK release is not available yet.
+Download the latest version of Poyshakori for Android.
 
-When a release is ready, download it from the **Android APK** badge at the top of this README.
+""Download Poyshakori" (https://img.shields.io/badge/Download-Android%20APK-brightgreen?style=for-the-badge&logo=android)" (https://github.com/sobuj-here/Poyshakori/releases/latest)
 
-<!-- Once published, add a GitHub Release at:
-https://github.com/YOUR-USERNAME/Poyshakori/releases
--->
+«Note: Poyshakori is currently under development. Features may change in future releases.»
 
 ## 🗺️ Future Plans
 

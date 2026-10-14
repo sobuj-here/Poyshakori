@@ -61,7 +61,7 @@ Built with a focus on simplicity, privacy, and financial clarity, Poyshakori aim
 ## 📱 App Screenshots
 
 <p align="center">
-  <img src="screenshots/dashboard.png" width="240" alt="Poyshakori Dashboard">
+  <img src="screenshots/dashboard.png" width="240" alt="Poyshakori Dashboard_">
   <img src="screenshots/new-transaction.png" width="240" alt="New Transaction">
 </p><p align="center">
   <img src="screenshots/debt-loan.png" width="240" alt="Debt and Loan Management">

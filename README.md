@@ -58,6 +58,15 @@ Built with a focus on simplicity, privacy, and financial clarity, Poyshakori aim
 | Architecture | MVVM |
 | Local Database | Room (SQLite) |
 
+## 📱 App Screenshots
+
+<p align="center">
+  <img src="screenshots/dashboard.png" width="240" alt="Poyshakori Dashboard">
+  <img src="screenshots/new-transaction.png" width="240" alt="New Transaction">
+</p><p align="center">
+  <img src="screenshots/debt-loan.png" width="240" alt="Debt and Loan Management">
+  <img src="screenshots/privacy-settings.png" width="240" alt="Privacy Settings">
+</p>
 ## 🔐 Privacy & Data Control
 
 Poyshakori is being designed around local data control and offline access.

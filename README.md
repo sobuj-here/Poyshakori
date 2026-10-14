@@ -15,7 +15,7 @@
 
   <!-- Replace the URL after releasing your APK -->
   <p>
-    <a href="https://github.com/YOUR-USERNAME/Poyshakori/releases">
+    <a href="https://github.com/sobu-here/Poyshakori/releases">
       <img src="https://img.shields.io/badge/Download-Android%20APK-brightgreen?style=for-the-badge&logo=android" alt="Download APK">
     </a>
   </p>

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="poyshakori-logo.jpg" width="280" alt="Poyshakori Logo">
+  <img src="screenshots/poyshakori-logo.jpg" width="280" alt="Poyshakori Logo">
 </p><h1 align="center">💰 Poyshakori</h1><p align="center">
   <strong>Take Control of Your Money.</strong>
 </p><p align="center">

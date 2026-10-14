@@ -73,7 +73,7 @@ From everyday expenses to long-term savings, Poyshakori aims to help users under
 
 Poyshakori is currently under development. Features, design, and implementation details may evolve as development progresses.
 
-## 📥 Download
+📥 Download
 
 Download the latest version of Poyshakori for Android.
 

@@ -73,13 +73,13 @@ From everyday expenses to long-term savings, Poyshakori aims to help users under
 
 Poyshakori is currently under development. Features, design, and implementation details may evolve as development progresses.
 
-📥 Download
+## 📥 Download
 
-Download the latest version of Poyshakori for Android.
+Get the latest Android version of Poyshakori below.
 
-""Download Poyshakori" (https://img.shields.io/badge/Download-Android%20APK-brightgreen?style=for-the-badge&logo=android)" (https://github.com/sobuj-here/Poyshakori/releases/latest)
+[![Download APK](https://img.shields.io/badge/Download-APK-brightgreen?style=for-the-badge&logo=android)](https://github.com/sobuj-here/Poyshakori/releases/latest)
 
-«Note: Poyshakori is currently under development. Features may change in future releases.»
+*Poyshakori is currently under development.*
 
 ## 🗺️ Future Plans
 

@@ -79,7 +79,7 @@ Get the latest Android version of Poyshakori below.
 
 [![Download APK](https://img.shields.io/badge/Download-APK-brightgreen?style=for-the-badge&logo=android)](https://github.com/sobuj-here/Poyshakori/releases/latest)
 
-*Poyshakori is currently under development.*
+
 
 ## 🗺️ Future Plans
 

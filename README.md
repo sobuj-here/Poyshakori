@@ -1,31 +1,20 @@
+
 <p align="center">
   <img src="screenshots/poyshakori-logo.jpg" width="280" alt="Poyshakori Logo">
-</p><h1 align="center">💰 Poyshakori</h1><p align="center">
+</p><h1 align="center">Poyshakori</h1><p align="center">
   <strong>Take Control of Your Money.</strong>
 </p><p align="center">
   A privacy-focused personal finance and money management app for Android.
-</p>
-
-
-
-
-  <p>
-    <img src="https://img.shields.io/badge/Platform-Android-green?style=for-the-badge&logo=android" alt="Android">
-    <img src="https://img.shields.io/badge/Language-Kotlin-purple?style=for-the-badge&logo=kotlin" alt="Kotlin">
-    <img src="https://img.shields.io/badge/UI-Jetpack%20Compose-blue?style=for-the-badge" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Database-Room%20%7C%20SQLite-orange?style=for-the-badge" alt="Room SQLite">
-  </p>
-
-  <!-- Replace the URL after releasing your APK -->
-  <p>
-    <a href="https://github.com/sobuj-here/Poyshakori/releases/latest">
-      <img src="https://img.shields.io/badge/Download-Poyshakori_APK-brightgreen?style=for-the-badge&amp;logo=android" alt="Download Poyshakori APK">
-    </a>
-  </p>
-
-  <p><em>🚧 Currently under development</em></p>
-</div>
-
+</p><p align="center">
+  <img src="https://img.shields.io/badge/Platform-Android-green?style=for-the-badge&logo=android" alt="Android">
+  <img src="https://img.shields.io/badge/Language-Kotlin-purple?style=for-the-badge&logo=kotlin" alt="Kotlin">
+  <img src="https://img.shields.io/badge/UI-Jetpack%20Compose-blue?style=for-the-badge" alt="Jetpack Compose">
+  <img src="https://img.shields.io/badge/Database-Room%20%7C%20SQLite-orange?style=for-the-badge" alt="Room SQLite">
+</p><p align="center">
+  <a href="https://github.com/sobuj-here/Poyshakori/releases/latest">
+    <img src="https://img.shields.io/badge/Download-Poyshakori_APK-brightgreen?style=for-the-badge&logo=android" alt="Download Poyshakori APK">
+  </a>
+</p><p align="center"><em>🚧 Currently under development</em></p>---
 ---
 
 ## 📖 About Poyshakori

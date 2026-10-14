@@ -15,8 +15,7 @@
 
   <!-- Replace the URL after releasing your APK -->
   <p>
-   [![Download Poyshakori](https://img.shields.io/badge/Download-Poyshakori_APK-brightgreen?style=for-the-badge&logo=android)](https://github.com/sobuj-here/Poyshakori/releases/latest)
-    </a>
+   ""Download Poyshakori" (https://img.shields.io/badge/Download-Poyshakori_APK-brightgreen?style=for-the-badge&logo=android)" (https://github.com/sobuj-here/Poyshakori/releases/latest)
   </p>
 
   <p><em>🚧 Currently under development</em></p>

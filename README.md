@@ -1,10 +1,13 @@
-<div align="center">
-  <h1>💰 Poyshakori</h1>
-  <p><strong>Take Control of Your Money.</strong></p>
+<p align="center">
+  <img src="poyshakori-logo.jpg" width="280" alt="Poyshakori Logo">
+</p><h1 align="center">💰 Poyshakori</h1><p align="center">
+  <strong>Take Control of Your Money.</strong>
+</p><p align="center">
+  A privacy-focused personal finance and money management app for Android.
+</p>
 
-  <p>
-    A privacy-focused personal finance and money management app for Android.
-  </p>
+
+
 
   <p>
     <img src="https://img.shields.io/badge/Platform-Android-green?style=for-the-badge&logo=android" alt="Android">

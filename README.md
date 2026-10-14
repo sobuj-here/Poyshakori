@@ -1,7 +1,6 @@
-Poyshakori
+## Poyshakori
 
 Take Control of Your Money.
-
 Poyshakori is a personal finance and money management application designed to help individuals track their income, manage expenses, organize financial accounts, and gain better control over their money.
 
 Built with a focus on simplicity, privacy, and financial clarity, Poyshakori aims to make everyday money management easier through an intuitive and organized experience.
@@ -36,6 +35,5 @@ The goal of Poyshakori is to provide a practical, reliable, and privacy-consciou
 From everyday expenses to long-term savings, Poyshakori aims to help users make more informed financial decisions.
 
 Development Status
-
 Poyshakori is currently under development. Features and implementation details may evolve as the application progresses toward release.
 

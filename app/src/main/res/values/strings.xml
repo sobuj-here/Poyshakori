@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Poyshakori</string>
+    <string name="app_subtitle">Private Finance &amp; Accounting</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_transactions">Transactions</string>
+    <string name="nav_accounts">Accounts</string>
+    <string name="nav_budgets">Budgets</string>
+    <string name="nav_reports">Reports</string>
+
+    <!-- Dashboard -->
+    <string name="total_net_balance">Total Net Balance</string>
+    <string name="active_accounts_notice">Active across all accounts</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="transfer">Transfer</string>
+    <string name="btn_quick_expense">- Expense</string>
+    <string name="btn_quick_income">+ Income</string>
+    <string name="btn_quick_transfer">⇄ Transfer</string>
+    <string name="recent_transactions">Recent Transactions</string>
+    <string name="see_all">See All ➔</string>
+    <string name="dashboard_empty_state">No transactions recorded yet.\nTap + to record your first transaction.</string>
+    <string name="monthly_income_label">This Month Income</string>
+    <string name="monthly_expense_label">This Month Expense</string>
+
+    <!-- Transactions Screen -->
+    <string name="search_hint">Search category, note, reference, amount...</string>
+    <string name="filter_all">All</string>
+    <string name="filter_by_account">Filter by Account</string>
+    <string name="all_accounts_filter">All Accounts</string>
+    <string name="no_transactions_found">No matching transactions found.</string>
+
+    <!-- Accounts Screen -->
+    <string name="total_in_accounts">Total in Accounts</string>
+    <string name="btn_add_account">+ Add New Account</string>
+    <string name="account_details">Account Details</string>
+    <string name="adjust_balance">Adjust Balance</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="delete_account_confirm">Are you sure you want to delete account \'%1$s\'?</string>
+    <string name="account_archived_notice">Account contains transaction history and was archived safely to protect your records.</string>
+    <string name="account_removed">Account removed successfully.</string>
+    <string name="account_created">Account \'%1$s\' created.</string>
+    <string name="account_updated">Account updated successfully.</string>
+
+    <!-- Budgets & Debts Screen -->
+    <string name="tab_budgets">Budgets</string>
+    <string name="tab_debts">Debts &amp; Loans</string>
+    <string name="btn_set_budget">+ Set Monthly Budget</string>
+    <string name="btn_add_debt">+ Add Debt or Loan</string>
+    <string name="i_owe">I Owe</string>
+    <string name="owed_to_me">Owed to Me</string>
+    <string name="budget_limit">Limit: %1$s</string>
+    <string name="budget_spent">Spent: %1$s</string>
+    <string name="budget_remaining">Remaining: %1$s (%2$s)</string>
+    <string name="budget_over">Over budget: %1$s!</string>
+    <string name="delete_budget">Delete Budget</string>
+    <string name="delete_budget_confirm">Remove monthly budget for \'%1$s\'?</string>
+    <string name="budget_deleted">Budget deleted.</string>
+    <string name="budget_saved">Budget saved for %1$s.</string>
+
+    <!-- Debts and Repayments -->
+    <string name="add_debt_loan">Add Debt or Loan</string>
+    <string name="debt_type_owe">I Owe (Borrowing)</string>
+    <string name="debt_type_owed_to_me">Owed to Me (Lending)</string>
+    <string name="person_name">Person or Organization Name *</string>
+    <string name="person_name_hint">e.g. John Doe, Office</string>
+    <string name="debt_amount">Amount (BDT) *</string>
+    <string name="debt_amount_hint">e.g. 1000</string>
+    <string name="debt_date_label">Lending / Borrowing Date *</string>
+    <string name="due_date_optional">Repayment Due Date (Optional)</string>
+    <string name="due_date_hint">YYYY-MM-DD</string>
+    <string name="debt_reference_optional">Reference / Receipt # (Optional)</string>
+    <string name="debt_reference_hint">e.g. LN-1024</string>
+    <string name="debt_note_optional">Note or Reason (Optional)</string>
+    <string name="debt_note_hint">e.g. Medical emergency loan</string>
+    <string name="mark_paid">Mark Paid</string>
+    <string name="record_repayment">Record Repayment</string>
+    <string name="repayment_amount">Repayment Amount (BDT) *</string>
+    <string name="repayment_account">Payment Account *</string>
+    <string name="repayment_history">Repayment History</string>
+    <string name="delete_debt">Delete Debt Record</string>
+    <string name="delete_debt_confirm">Are you sure you want to delete this record with %1$s?</string>
+    <string name="debt_deleted">Debt record deleted.</string>
+    <string name="debt_saved">Debt record saved.</string>
+    <string name="repayment_recorded">Repayment recorded successfully.</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_partially_paid">Partially Paid</string>
+    <string name="status_paid">Paid</string>
+    <string name="status_overdue">Overdue</string>
+    <string name="due_label">Due: %1$s</string>
+    <string name="no_due_date">No due date</string>
+    <string name="debt_account_label">Account *</string>
+    <string name="select_account_error">Please select an account</string>
+    <string name="notification_channel_debt_reminders">Debt &amp; Loan Reminders</string>
+    <string name="notification_channel_debt_reminders_desc">Notifications for debt return dates and due reminders</string>
+    <string name="debt_reminder_due_today_title">Return Date Today</string>
+    <string name="debt_reminder_overdue_title">Return Date Overdue</string>
+    <string name="debt_reminder_receivable_today">%1$s owes you %2$s. Return date is today!</string>
+    <string name="debt_reminder_receivable_overdue">%1$s owes you %2$s. Due date (%3$s) has passed!</string>
+    <string name="debt_reminder_debt_today">You owe %1$s %2$s. Return date is today!</string>
+    <string name="debt_reminder_debt_overdue">You owe %1$s %2$s. Due date (%3$s) has passed!</string>
+
+    <!-- Recycle Bin & Deletion Protection -->
+    <string name="recycle_bin">Recycle Bin</string>
+    <string name="recycle_bin_empty">Recycle Bin is empty.</string>
+    <string name="move_to_trash">Move to Recycle Bin</string>
+    <string name="move_to_trash_confirm">Move this %1$s to the Recycle Bin? You can restore it anytime from Settings.</string>
+    <string name="item_moved_to_trash">Item moved to Recycle Bin.</string>
+    <string name="restore">Restore</string>
+    <string name="restore_confirm">Restore this item back to your active records?</string>
+    <string name="item_restored">Item restored successfully.</string>
+    <string name="delete_permanently">Delete Permanently</string>
+    <string name="delete_permanently_confirm">Permanently delete this item? This action cannot be undone.</string>
+    <string name="empty_recycle_bin">Empty Recycle Bin</string>
+    <string name="empty_recycle_bin_confirm">Permanently remove all items in the Recycle Bin? This cannot be undone.</string>
+    <string name="recycle_bin_cleared">Recycle Bin cleared.</string>
+    <string name="cannot_delete_account_balance">Cannot delete account \'%1$s\': it has an active balance of %2$s. Please transfer or adjust the balance to zero first.</string>
+    <string name="cannot_delete_account_transactions">Cannot delete account \'%1$s\': it has %2$d linked transactions. To protect your financial history, accounts with existing records cannot be deleted.</string>
+    <string name="edit_account_name_type">Edit Account Info</string>
+    <string name="edit_account_balance_locked_notice">Account balance is calculated directly from transactions and cannot be edited manually. Use transfers, transactions, or reconciliation to adjust balances.</string>
+    <string name="reconcile_account">Reconcile Balance</string>
+    <string name="view_account_transactions">View Transactions</string>
+
+    <!-- Reports & Settings Screen -->
+    <string name="spending_breakdown">Spending Breakdown</string>
+    <string name="monthly_summary_report">Monthly Financial Summaries</string>
+    <string name="preferences_settings">Preferences &amp; Display</string>
+    <string name="theme_setting">App Theme</string>
+    <string name="theme_setting_sub">Choose Dark, Light, or System Default</string>
+    <string name="language_setting">Language</string>
+    <string name="language_setting_sub">English or Bengali</string>
+    <string name="lang_english">English</string>
+    <string name="lang_bangla">বাংলা (Bangla)</string>
+
+    <!-- Backup & Security -->
+    <string name="data_privacy_settings">Data &amp; Privacy Settings</string>
+    <string name="btn_export_csv">Export Transactions to CSV</string>
+    <string name="btn_backup_encrypted">Export Encrypted Backup</string>
+    <string name="btn_restore_encrypted">Restore Encrypted Backup</string>
+    <string name="btn_verify_backup">Verify Backup Integrity</string>
+    <string name="btn_backup_security">Backup Security &amp; Password</string>
+    <string name="biometric_lock">App Lock</string>
+    <string name="biometric_lock_sub">Require fingerprint, screen lock or PIN on launch</string>
+    <string name="app_lock_enabled">App Lock enabled</string>
+    <string name="app_lock_disabled">App Lock disabled</string>
+    <string name="auth_unavailable">Biometric or device credential lock not configured on device.</string>
+    <string name="auth_failed">Authentication failed: %1$s</string>
+    <string name="app_lock_screen_desc">Poyshakori is locked. Please authenticate to access your financial data.</string>
+    <string name="btn_unlock">Unlock</string>
+    <string name="btn_enter_pin">Enter PIN</string>
+    <string name="set_in_app_pin">Security PIN (4 Digits)</string>
+    <string name="set_in_app_pin_sub">Set a 4-digit PIN for backup or direct unlock</string>
+    <string name="pin_setup_title">Set 4-Digit Security PIN</string>
+    <string name="pin_setup_desc">Enter a 4-digit PIN to secure Poyshakori</string>
+    <string name="pin_confirm_desc">Re-enter your 4-digit PIN to confirm</string>
+    <string name="pin_enter_title">Enter App PIN</string>
+    <string name="pin_enter_hint">4-digit PIN</string>
+    <string name="pin_mismatch">PINs do not match. Please try again.</string>
+    <string name="pin_incorrect">Incorrect PIN. Please try again.</string>
+    <string name="pin_saved">Security PIN set successfully.</string>
+    <string name="pin_removed">Security PIN removed.</string>
+    <string name="lock_timeout_title">Lock Timeout</string>
+    <string name="lock_timeout_sub">Lock after leaving app: %1$s</string>
+    <string name="lock_immediately">Immediately</string>
+    <string name="lock_15_seconds">After 15 seconds</string>
+    <string name="lock_1_minute">After 1 minute</string>
+    <string name="lock_5_minutes">After 5 minutes</string>
+    <string name="change_in_app_pin">Change Security PIN</string>
+    <string name="remove_in_app_pin">Remove Security PIN</string>
+    <string name="device_lock_not_setup_msg">Neither biometric nor screen lock is configured on your phone. Please set a 4-digit App PIN to enable App Lock.</string>
+
+    <!-- Dialogs Common -->
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_proceed">Proceed</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="btn_ok">OK</string>
+
+    <!-- Add Transaction Dialog -->
+    <string name="new_transaction">New Transaction</string>
+    <string name="amount_bdt">Amount (BDT) *</string>
+    <string name="amount_hint">e.g. 500</string>
+    <string name="category_label">Category *</string>
+    <string name="account_label">Source Account *</string>
+    <string name="dest_account_label">Destination Account *</string>
+    <string name="date_label">Date</string>
+    <string name="payment_method_label">Payment Method</string>
+    <string name="note_optional">Note (Optional)</string>
+    <string name="note_hint">e.g. Grocery shopping</string>
+    <string name="transaction_saved">Transaction saved successfully.</string>
+    <string name="transaction_deleted">Transaction deleted and balances updated.</string>
+    <string name="delete_transaction">Delete Transaction</string>
+    <string name="delete_transaction_confirm">Are you sure you want to delete this %1$s of %2$s? Balances will be updated automatically.</string>
+    <string name="transaction_details">%1$s Details</string>
+    <string name="different_accounts_error">Source and destination accounts must be different.</string>
+    <string name="valid_amount_error">Please enter a valid positive amount.</string>
+    <string name="valid_account_error">Please select a valid account.</string>
+
+    <!-- Add Account Dialog -->
+    <string name="add_account">Add Account</string>
+    <string name="account_name">Account Name *</string>
+    <string name="account_name_hint">e.g. City Bank, bKash, Cash Wallet</string>
+    <string name="account_type">Account Type *</string>
+    <string name="initial_balance">Opening Balance (BDT)</string>
+    <string name="account_name_required">Account name is required.</string>
+    <string name="account_balance_updated">Account balance updated.</string>
+
+    <!-- Budget Dialog -->
+    <string name="set_monthly_budget">Set Monthly Budget</string>
+    <string name="monthly_limit">Monthly Limit (BDT) *</string>
+    <string name="monthly_limit_hint">e.g. 5000</string>
+    <string name="budget_rollover_label">Enable Rollover (Carry forward unused balance)</string>
+    <string name="valid_budget_error">Please enter a valid budget limit.</string>
+
+    <!-- Backup Password Dialogs -->
+    <string name="export_backup_title">Export Encrypted Backup</string>
+    <string name="restore_backup_title">Restore Encrypted Backup</string>
+    <string name="verify_backup_title">Verify Backup Integrity</string>
+    <string name="backup_password_hint">Enter Backup Password</string>
+    <string name="current_password_hint">Current Password</string>
+    <string name="new_password_hint">New Password</string>
+    <string name="confirm_new_password_hint">Confirm New Password</string>
+    <string name="password_min_length">Password must be at least 6 characters.</string>
+    <string name="passwords_do_not_match">New passwords do not match.</string>
+    <string name="password_changed">Backup password updated successfully.</string>
+    <string name="incorrect_current_password">Incorrect current password.</string>
+    <string name="forgot_password_warning">Important: Forgotten passwords cannot be recovered by anyone. Please record it safely.</string>
+    <string name="old_backups_warning">Notice: Changing your password does not re-encrypt existing backup files. Existing backups remain protected by their original passwords.</string>
+    <string name="backup_success">Encrypted backup created successfully.</string>
+    <string name="backup_failed">Backup export failed. Please try again.</string>
+    <string name="restore_confirm_title">Confirm Database Restore</string>
+    <string name="restore_confirm_msg">Restoring will replace all current financial records with data from the backup file. Proceed?</string>
+    <string name="restore_success">Database restored successfully.</string>
+    <string name="restore_failed">Restore failed! Incorrect password or corrupted backup file.</string>
+    <string name="verify_success">Backup file is valid and intact.</string>
+    <string name="verify_failed">Verification failed: %1$s</string>
+    <string name="no_transactions_export">No transactions available to export.</string>
+    <string name="export_failed">Export failed: %1$s</string>
+
+    <!-- Additional Features -->
+    <string name="btn_recurring_transactions">Recurring Transactions</string>
+    <string name="btn_savings_goals">Savings Goals</string>
+    <string name="btn_reconciliation">Account Reconciliation</string>
+    <string name="add_recurring">Add Recurring Schedule</string>
+    <string name="recurring_title">Schedule Title *</string>
+    <string name="recurring_title_hint">e.g. Monthly House Rent, Internet Bill</string>
+    <string name="frequency_label">Frequency *</string>
+    <string name="freq_daily">Daily</string>
+    <string name="freq_weekly">Weekly</string>
+    <string name="freq_monthly">Monthly</string>
+    <string name="freq_yearly">Yearly</string>
+    <string name="auto_record_label">Automatically record transactions when due</string>
+    <string name="next_due_label">Next Due: %1$s</string>
+
+    <string name="add_savings_goal">Add Savings Goal</string>
+    <string name="goal_title">Goal Name *</string>
+    <string name="goal_title_hint">e.g. Emergency Fund, New Laptop</string>
+    <string name="target_amount">Target Amount (BDT) *</string>
+    <string name="target_date">Target Date</string>
+    <string name="contribute_to_goal">Contribute to Goal</string>
+    <string name="contribution_amount">Contribution Amount (BDT) *</string>
+    <string name="source_account">Deduct From Account *</string>
+    <string name="goal_progress">Saved: %1$s of %2$s (%3$s)</string>
+
+    <string name="reconciliation_title">Account Reconciliation</string>
+    <string name="actual_balance_label">Actual Counted Balance (BDT) *</string>
+    <string name="system_balance_label">System Recorded Balance: %1$s</string>
+    <string name="discrepancy_label">Discrepancy: %1$s</string>
+    <string name="reconciliation_saved">Reconciliation record saved.</string>
+
+    <!-- Theme Dialog Options -->
+    <string name="theme_dark">Dark Mode</string>
+    <string name="theme_light">Light Mode</string>
+    <string name="theme_system">System Default</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">Settings</string>
+    <string name="section_appearance_language">Appearance &amp; Language</string>
+    <string name="section_security_lock">Security &amp; App Lock</string>
+    <string name="section_backup_restore">Backup &amp; Restore (Offline Encrypted)</string>
+    <string name="section_notifications">Notifications &amp; Reminders</string>
+    <string name="section_data_recycle">Data Management &amp; Recycle Bin</string>
+    <string name="section_about">About Poyshakori</string>
+    <string name="offline_privacy_desc">100% Offline &amp; Private. No Firebase, no cloud servers, and no tracking. All financial records are stored locally with AES-256 encryption.</string>
+    <string name="debt_reminders_toggle">Debt &amp; Loan Return Reminders</string>
+    <string name="debt_reminders_toggle_sub">Daily 9:00 AM alerts for debts due today or overdue</string>
+    <string name="bill_reminders_toggle">Recurring Bills &amp; Schedules</string>
+    <string name="bill_reminders_toggle_sub">Alerts when recurring payments or scheduled bills are due</string>
+    <string name="recycle_bin_count">%1$d item(s) in Recycle Bin</string>
+    <string name="view_recycle_bin">Open Recycle Bin</string>
+    <string name="app_version_name">Poyshakori v4.0 (Offline-First)</string>
+    <string name="about_app_desc">A clean, private personal finance and accounting manager built with Kotlin and Jetpack Compose/Views. Kept 100% offline on your device.</string>
+    <string name="restore_preview_title">Restore Preview</string>
+    <string name="restore_preview_content">The selected backup contains:\n• %1$d Accounts\n• %2$d Transactions\n• %3$d Debts/Loans\n• %4$d Budgets\n\nDatabase Version: %5$d\n\nWarning: Restoring will overwrite all existing records on this device. Do you want to proceed?</string>
+
+    <!-- Cash Flow & Insights -->
+    <string name="cash_flow_forecast">Cash Flow Forecast</string>
+    <string name="cash_flow_forecast_sub">Projected income, expense and balance for upcoming periods</string>
+    <string name="forecast_7_days">7 Days Projection</string>
+    <string name="forecast_30_days">30 Days Projection</string>
+    <string name="projected_income">Expected Income</string>
+    <string name="projected_expense">Expected Expenses</string>
+    <string name="projected_net_change">Net Cash Flow</string>
+    <string name="projected_future_balance">Projected Balance</string>
+    <string name="spending_insights">Spending Insights</string>
+    <string name="spending_increased">Spending increased by %1$s (%2$s%%) compared to last month</string>
+    <string name="spending_decreased">Spending decreased by %1$s (%2$s%%) compared to last month</string>
+    <string name="spending_same">Spending is steady compared to last month</string>
+    <string name="spending_no_data">Not enough historical data to generate spending comparisons.</string>
+
+    <!-- Search & Filters -->
+    <string name="filter_account">Filter Account</string>
+    <string name="filter_date_range">Date Range</string>
+    <string name="filter_sort">Sort By</string>
+    <string name="sort_newest">Newest First</string>
+    <string name="sort_oldest">Oldest First</string>
+    <string name="sort_highest">Highest Amount</string>
+    <string name="sort_lowest">Lowest Amount</string>
+    <string name="clear_all_filters">Clear Filters</string>
+    <string name="all_accounts">All Accounts</string>
+    <string name="custom_date_range">%1$s to %2$s</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+
+    <!-- Reconciliation -->
+    <string name="reconcile_dialog_title">Account Reconciliation</string>
+    <string name="reconcile_match">Balances match perfectly! No difference found.</string>
+    <string name="reconcile_difference">Discrepancy: %1$s</string>
+    <string name="reconcile_create_adjustment">Create Adjustment Transaction</string>
+    <string name="reconcile_adjustment_created">Reconciliation adjustment transaction created.</string>
+
+    <!-- Repayments & Debt History -->
+    <string name="no_repayments_yet">No repayments recorded yet.</string>
+    <string name="no_original_date">No date specified</string>
+    <string name="debt_original_date">Original Date: %1$s</string>
+    <string name="debt_start_date">Start: %1$s</string>
+    <string name="debt_due_date_label">Due Date: %1$s</string>
+    <string name="ref_prefix">Ref: %1$s</string>
+    <string name="debt_principal_sub">Principal: %1$s • Paid: %2$s</string>
+    <string name="outstanding_balance">Outstanding Balance: %1$s</string>
+    <string name="principal_amount">Principal Amount: %1$s</string>
+    <string name="total_repaid">Total Repaid: %1$s</string>
+    <string name="counterparty_label">Person / Party: %1$s</string>
+    <string name="scheduled_items">Scheduled Items</string>
+    <string name="export_pdf_report">Export Financial Report</string>
+
+    <!-- Reports Sections -->
+    <string name="reports_financial_overview">1. Financial Overview</string>
+    <string name="reports_spending_analysis">2. Spending Analysis</string>
+    <string name="reports_cash_flow_forecast">3. Cash Flow Forecast</string>
+    <string name="reports_monthly_summaries">4. Monthly Financial Summaries</string>
+    <string name="reports_recurring_txns">5. Recurring Transactions</string>
+    <string name="reports_savings_goals">6. Savings Goals</string>
+    <string name="reports_reconciliation">7. Account Reconciliation</string>
+    <string name="reports_data_export">8. Reports &amp; Data Export</string>
+    <string name="monthly_summary_desc">Historical month-by-month financial statements</string>
+    <string name="recurring_txns_desc">Salary, rent, bills &amp; recurring schedules</string>
+    <string name="savings_goals_desc">Track targets and progress toward personal goals</string>
+    <string name="reconciliation_desc">Reconcile account statement with app balance</string>
+    <string name="export_csv_desc">Export full transaction history to CSV</string>
+    <string name="export_report_desc">Comprehensive financial report summary</string>
+    <string name="total_monthly_spending">Total Spent: %1$s</string>
+    <string name="net_monthly_savings">Net Savings: %1$s</string>
+
+    <!-- Categories Management -->
+    <string name="manage_categories">Manage Categories</string>
+    <string name="add_category">+ Add Category</string>
+    <string name="category_name_hint">Category Name</string>
+    <string name="category_type_income">Income</string>
+    <string name="category_type_expense">Expense</string>
+    <string name="delete_category_confirm">Are you sure you want to delete category \'%1$s\'?</string>
+    <string name="category_added">Category \'%1$s\' added successfully.</string>
+    <string name="category_deleted">Category deleted.</string>
+    <string name="category_exists">A category with this name already exists.</string>
+    <string name="valid_category_error">Please enter a valid category name.</string>
+
+    <!-- Duplicate Detection -->
+    <string name="duplicate_transaction_title">Duplicate Transaction Detected</string>
+    <string name="duplicate_transaction_warning">A transaction of %1$s in \'%2$s\' on %3$s already exists in this account. Do you want to record it anyway?</string>
+    <string name="btn_save_anyway">Save Anyway</string>
+
+    <!-- CSV Import -->
+    <string name="btn_import_csv">Import Transactions (CSV)</string>
+    <string name="import_csv_title">Import Transactions from CSV</string>
+    <string name="import_csv_select_account">Select destination account for imported records:</string>
+    <string name="import_csv_success">Successfully imported %1$d transactions.</string>
+    <string name="import_csv_failed">Failed to import CSV: %1$s</string>
+
+    <!-- Backup Options -->
+    <string name="backup_share_option">Share / Send Backup (Google Drive, WhatsApp, Files)</string>
+    <string name="backup_saf_option">Save to Folder (Storage Access)</string>
+    <string name="choose_backup_method">Choose Backup Destination</string>
+    <string name="btn_auto_backup">Instant Backup to App Storage</string>
+    <string name="auto_backup_success">Encrypted backup created: %1$s</string>
+
+    <!-- Emergency Fund Calculator -->
+    <string name="emergency_fund_title">Emergency Fund Calculator</string>
+    <string name="emergency_fund_desc">Recommended 3-6 months safety net: %1$s to %2$s based on your average monthly expenses.</string>
+
+    <!-- Automatic Encrypted Backup Section -->
+    <string name="auto_backup_title">Automatic Encrypted Backup</string>
+    <string name="auto_backup_desc">Automatically protect your financial ledger by scheduling encrypted backups to a folder of your choice without manual effort.</string>
+    <string name="auto_backup_enable">Enable Automatic Backup</string>
+    <string name="backup_folder_label">Backup Destination Folder</string>
+    <string name="select_backup_folder">Select Backup Folder</string>
+    <string name="change_backup_folder">Change Folder</string>
+    <string name="backup_frequency_label">Backup Frequency</string>
+    <string name="backup_freq_daily">Daily (Recommended)</string>
+    <string name="backup_freq_3_days">Every 3 Days</string>
+    <string name="backup_freq_weekly">Weekly</string>
+    <string name="backup_on_changes">Back up on important changes</string>
+    <string name="backup_on_changes_sub">Automatic debounced backup after adding transactions or debts</string>
+    <string name="btn_backup_now">Back Up Now</string>
+    <string name="last_backup_label">Last Backup: %1$s</string>
+    <string name="last_backup_status_label">Status: %1$s</string>
+    <string name="next_backup_label">Next Scheduled: %1$s</string>
+    <string name="backup_count_label">%1$d backups in selected folder</string>
+    <string name="folder_not_selected">No folder selected</string>
+    <string name="setup_backup_pwd_required">Please configure a backup encryption password first under Backup Security.</string>
+    <string name="backup_now_started">Automatic encrypted backup initiated...</string>
+    <string name="folder_permission_persisted">Backup folder selected and authorized successfully.</string>
+    <string name="disable_auto_backup_confirm">Disable automatic encrypted backups?</string>
+</resources>

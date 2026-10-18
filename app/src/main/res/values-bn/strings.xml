@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">পয়সাকড়ি</string>
+    <string name="app_subtitle">ব্যক্তিগত অর্থ ও হিসাব ব্যবস্থাপনা</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_dashboard">ড্যাশবোর্ড</string>
+    <string name="nav_transactions">লেনদেন</string>
+    <string name="nav_accounts">হিসাবসমূহ</string>
+    <string name="nav_budgets">বাজেট</string>
+    <string name="nav_reports">রিপোর্ট</string>
+
+    <!-- Dashboard -->
+    <string name="total_net_balance">মোট নিট স্থিতি</string>
+    <string name="active_accounts_notice">সকল অ্যাকাউন্টে সংরক্ষিত মোট অর্থ</string>
+    <string name="income">আয়</string>
+    <string name="expense">খরচ</string>
+    <string name="transfer">স্থানান্তর</string>
+    <string name="btn_quick_expense">- খরচ</string>
+    <string name="btn_quick_income">+ আয়</string>
+    <string name="btn_quick_transfer">⇄ স্থানান্তর</string>
+    <string name="recent_transactions">সাম্প্রতিক লেনদেন</string>
+    <string name="see_all">সব দেখুন ➔</string>
+    <string name="dashboard_empty_state">এখনও কোনো লেনদেন লিপিবদ্ধ করা হয়নি।\nনতুন লেনদেন যোগ করতে + বাটনে ট্যাপ করুন।</string>
+    <string name="monthly_income_label">চলতি মাসের আয়</string>
+    <string name="monthly_expense_label">চলতি মাসের ব্যয়</string>
+
+    <!-- Transactions Screen -->
+    <string name="search_hint">ক্যাটাগরি, নোট, রেফারেন্স বা পরিমাণ দিয়ে খুঁজুন...</string>
+    <string name="filter_all">সকল</string>
+    <string name="filter_by_account">অ্যাকাউন্ট অনুযায়ী ফিল্টার</string>
+    <string name="all_accounts_filter">সকল অ্যাকাউন্ট</string>
+    <string name="no_transactions_found">কোনো লেনদেন খুঁজে পাওয়া যায়নি।</string>
+
+    <!-- Accounts Screen -->
+    <string name="total_in_accounts">হিসাবসমূহের মোট অর্থ</string>
+    <string name="btn_add_account">+ নতুন হিসাব যোগ করুন</string>
+    <string name="account_details">হিসাবের বিবরণ</string>
+    <string name="adjust_balance">ব্যালেন্স সমন্বয় করুন</string>
+    <string name="delete_account">হিসাব মুছে ফেলুন</string>
+    <string name="delete_account_confirm">আপনি কি নিশ্চিত যে \'%1$s\' হিসাবটি মুছে ফেলতে চান?</string>
+    <string name="account_archived_notice">এই হিসাবে পূর্ববর্তী লেনদেন রয়েছে। আপনার আর্থিক রেকর্ড সুরক্ষিত রাখতে এটি নিরাপদে আর্কাইভ করা হয়েছে।</string>
+    <string name="account_removed">হিসাব সফলভাবে মুছে ফেলা হয়েছে।</string>
+    <string name="account_created">\'%1$s\' হিসাব সফলভাবে তৈরি হয়েছে।</string>
+    <string name="account_updated">হিসাবের তথ্য হালনাগাদ করা হয়েছে।</string>
+
+    <!-- Budgets & Debts Screen -->
+    <string name="tab_budgets">বাজেট</string>
+    <string name="tab_debts">দেনা ও পাওনা</string>
+    <string name="btn_set_budget">+ মাসিক বাজেট নির্ধারণ করুন</string>
+    <string name="btn_add_debt">+ দেনা বা পাওনা যোগ করুন</string>
+    <string name="i_owe">আমার দেনা</string>
+    <string name="owed_to_me">আমার পাওনা</string>
+    <string name="budget_limit">সর্বোচ্চ সীমা: %1$s</string>
+    <string name="budget_spent">খরচ হয়েছে: %1$s</string>
+    <string name="budget_remaining">অবশিষ্ট: %1$s (%2$s)</string>
+    <string name="budget_over">বাজেট অতিরিক্ত খরচ: %1$s!</string>
+    <string name="delete_budget">বাজেট মুছে ফেলুন</string>
+    <string name="delete_budget_confirm">আপনি কি \'%1$s\' খাতের বাজেট মুছে ফেলতে চান?</string>
+    <string name="budget_deleted">বাজেট মুছে ফেলা হয়েছে।</string>
+    <string name="budget_saved">%1$s খাতের জন্য বাজেট সংরক্ষিত হয়েছে।</string>
+
+    <!-- Debts and Repayments -->
+    <string name="add_debt_loan">দেনা বা পাওনা যোগ করুন</string>
+    <string name="debt_type_owe">আমার দেনা (ঋণ গ্রহণ)</string>
+    <string name="debt_type_owed_to_me">আমার পাওনা (ঋণ প্রদান)</string>
+    <string name="person_name">ব্যক্তি বা প্রতিষ্ঠানের নাম *</string>
+    <string name="person_name_hint">যেমন: রহিম, অফিস</string>
+    <string name="debt_amount">টাকার পরিমাণ *</string>
+    <string name="debt_amount_hint">যেমন: ১০০০</string>
+    <string name="debt_date_label">ঋণ গ্রহণ বা প্রদানের তারিখ *</string>
+    <string name="due_date_optional">পরিশোধের শেষ তারিখ (ঐচ্ছিক)</string>
+    <string name="due_date_hint">YYYY-MM-DD</string>
+    <string name="debt_reference_optional">রেফারেন্স বা রশিদ নম্বর (ঐচ্ছিক)</string>
+    <string name="debt_reference_hint">যেমন: LN-1024</string>
+    <string name="debt_note_optional">নোট বা কারণ (ঐচ্ছিক)</string>
+    <string name="debt_note_hint">যেমন: চিকিৎসার খরচের জন্য ধার</string>
+    <string name="mark_paid">পরিশোধ সম্পন্ন</string>
+    <string name="record_repayment">পরিশোধ লিপিবদ্ধ করুন</string>
+    <string name="repayment_amount">পরিশোধের পরিমাণ *</string>
+    <string name="repayment_account">পরিশোধের অ্যাকাউন্ট *</string>
+    <string name="repayment_history">পরিশোধের ইতিহাস</string>
+    <string name="delete_debt">দেনার রেকর্ড মুছুন</string>
+    <string name="delete_debt_confirm">আপনি কি %1$s এর সাথে দেনা-পাওনার রেকর্ড মুছে ফেলতে চান?</string>
+    <string name="debt_deleted">রেকর্ড মুছে ফেলা হয়েছে।</string>
+    <string name="debt_saved">দেনা বা পাওনার তথ্য সংরক্ষিত হয়েছে।</string>
+    <string name="repayment_recorded">পরিশোধ সফলভাবে লিপিবদ্ধ করা হয়েছে।</string>
+    <string name="status_pending">বকেয়া</string>
+    <string name="status_partially_paid">আংশিক পরিশোধিত</string>
+    <string name="status_paid">সম্পূর্ণ পরিশোধিত</string>
+    <string name="status_overdue">সময় উত্তীর্ণ</string>
+    <string name="due_label">পরিশোধের শেষ তারিখ: %1$s</string>
+    <string name="no_due_date">নির্দিষ্ট তারিখ নেই</string>
+    <string name="debt_account_label">অ্যাকাউন্ট *</string>
+    <string name="select_account_error">অনুগ্রহ করে একটি অ্যাকাউন্ট নির্বাচন করুন</string>
+    <string name="notification_channel_debt_reminders">ধার ও দেনা রিমাইন্ডার</string>
+    <string name="notification_channel_debt_reminders_desc">টাকা ফেরত দেওয়ার ও পাওয়ার তারিখ সংক্রান্ত রিমাইন্ডার</string>
+    <string name="debt_reminder_due_today_title">টাকা ফেরত দেওয়ার তারিখ আজ</string>
+    <string name="debt_reminder_overdue_title">টাকা ফেরত দেওয়ার তারিখ পেরিয়ে গেছে</string>
+    <string name="debt_reminder_receivable_today">%1$s এর থেকে %2$s ফেরত পাওয়ার তারিখ আজ!</string>
+    <string name="debt_reminder_receivable_overdue">%1$s এর থেকে %2$s ফেরত পাওয়ার তারিখ (%3$s) পেরিয়ে গেছে!</string>
+    <string name="debt_reminder_debt_today">%1$s কে %2$s ফেরত দেওয়ার তারিখ আজ!</string>
+    <string name="debt_reminder_debt_overdue">%1$s কে %2$s ফেরত দেওয়ার তারিখ (%3$s) পেরিয়ে গেছে!</string>
+
+    <!-- Recycle Bin & Deletion Protection -->
+    <string name="recycle_bin">রিসাইকেল বিন</string>
+    <string name="recycle_bin_empty">রিসাইকেল বিন খালি।</string>
+    <string name="move_to_trash">রিসাইকেল বিনে পাঠান</string>
+    <string name="move_to_trash_confirm">আপনি কি এই %1$s রিসাইকেল বিনে পাঠাতে চান? এটি সেটিংস থেকে যেকোনো সময় পুনরুদ্ধার করা যাবে।</string>
+    <string name="item_moved_to_trash">রিসাইকেল বিনে পাঠানো হয়েছে।</string>
+    <string name="restore">পুনরুদ্ধার করুন</string>
+    <string name="restore_confirm">আপনি কি এই রেকর্ডটি পুনরায় সক্রিয় হিসাবে ফিরিয়ে আনতে চান?</string>
+    <string name="item_restored">সফলভাবে পুনরুদ্ধার করা হয়েছে।</string>
+    <string name="delete_permanently">স্থায়ীভাবে মুছে ফেলুন</string>
+    <string name="delete_permanently_confirm">আপনি কি স্থায়ীভাবে মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।</string>
+    <string name="empty_recycle_bin">রিসাইকেল বিন খালি করুন</string>
+    <string name="empty_recycle_bin_confirm">রিসাইকেল বিনের সকল তথ্য স্থায়ীভাবে মুছে ফেলতে চান? এটি আর ফিরিয়ে আনা যাবে না।</string>
+    <string name="recycle_bin_cleared">রিসাইকেল বিন খালি করা হয়েছে।</string>
+    <string name="cannot_delete_account_balance">\'%1$s\' অ্যাকাউন্টটি মোছা সম্ভব নয়: এতে %2$s অবশিষ্ট রয়েছে। অনুগ্রহ করে ব্যালেন্স স্থানান্তর বা শূন্য করুন।</string>
+    <string name="cannot_delete_account_transactions">\'%1$s\' অ্যাকাউন্টটি মোছা সম্ভব নয়: এতে %2$d টি লেনদেন যুক্ত রয়েছে। আর্থিক হিসাবের নিরাপত্তার জন্য লেনদেন যুক্ত অ্যাকাউন্ট মোছা যাবে না।</string>
+    <string name="edit_account_name_type">অ্যাকাউন্টের তথ্য পরিবর্তন</string>
+    <string name="edit_account_balance_locked_notice">অ্যাকাউন্টের ব্যালেন্স সরাসরি লেনদেন থেকে হিসাব করা হয় এবং ম্যানুয়ালি পরিবর্তনযোগ্য নয়। ব্যালেন্স সমন্বয়ের জন্য লেনদেন বা রিকনসিলিয়েশন ব্যবহার করুন।</string>
+    <string name="reconcile_account">ব্যালেন্স মেলাও (রিকনসিল)</string>
+    <string name="view_account_transactions">লেনদেনসমূহ দেখুন</string>
+
+    <!-- Reports & Settings Screen -->
+    <string name="spending_breakdown">ব্যয়ের খাতওয়ারি বিবরণ</string>
+    <string name="monthly_summary_report">মাসিক আর্থিক তুলনামূলক বিবরণী</string>
+    <string name="preferences_settings">পছন্দ ও প্রদর্শন সেটিংস</string>
+    <string name="theme_setting">অ্যাপ থিম</string>
+    <string name="theme_setting_sub">ডার্ক, লাইট বা সিস্টেম ডিফল্ট বেছে নিন</string>
+    <string name="language_setting">ভাষা</string>
+    <string name="language_setting_sub">বাংলা অথবা ইংরেজি</string>
+    <string name="lang_english">English</string>
+    <string name="lang_bangla">বাংলা</string>
+
+    <!-- Backup & Security -->
+    <string name="data_privacy_settings">তথ্য নিরাপত্তা ও ব্যাকআপ সেটিংস</string>
+    <string name="btn_export_csv">সিএসভি ফাইলে লেনদেন এক্সপোর্ট করুন</string>
+    <string name="btn_backup_encrypted">এনক্রিপ্টেড ব্যাকআপ এক্সপোর্ট করুন</string>
+    <string name="btn_restore_encrypted">এনক্রিপ্টেড ব্যাকআপ রিস্টোর করুন</string>
+    <string name="btn_verify_backup">ব্যাকআপ ফাইলের সঠিকতা যাচাই করুন</string>
+    <string name="btn_backup_security">ব্যাকআপ নিরাপত্তা ও পাসওয়ার্ড</string>
+    <string name="biometric_lock">অ্যাপ লক</string>
+    <string name="biometric_lock_sub">অ্যাপে প্রবেশের সময় ফিঙ্গারপ্রিন্ট, স্ক্রিন লক বা পিন যাচাই করুন</string>
+    <string name="app_lock_enabled">অ্যাপ লক সক্রিয় করা হয়েছে</string>
+    <string name="app_lock_disabled">অ্যাপ লক নিষ্ক্রিয় করা হয়েছে</string>
+    <string name="auth_unavailable">ডিভাইসে ফিঙ্গারপ্রিন্ট বা লক সুবিধা সক্রিয় নেই।</string>
+    <string name="auth_failed">যাচাইকরণ ব্যর্থ হয়েছে: %1$s</string>
+    <string name="app_lock_screen_desc">পয়শাকড়ি লক করা আছে। আর্থিক তথ্য দেখতে আনলক করুন।</string>
+    <string name="btn_unlock">লক খুলুন</string>
+    <string name="btn_enter_pin">পিন দিয়ে খুলুন</string>
+    <string name="set_in_app_pin">নিরাপত্তা পিন (৪ ডিজিট)</string>
+    <string name="set_in_app_pin_sub">ব্যাকআপ বা সরাসরি আনলক করার জন্য ৪ ডিজিটের পিন সেট করুন</string>
+    <string name="pin_setup_title">৪ ডিজিটের নিরাপত্তা পিন সেট করুন</string>
+    <string name="pin_setup_desc">পয়শাকড়ি সুরক্ষিত রাখতে ৪ ডিজিটের একটি পিন দিন</string>
+    <string name="pin_confirm_desc">নিশ্চিত করতে পিনটি আবার লিখুন</string>
+    <string name="pin_enter_title">অ্যাপের পিন লিখুন</string>
+    <string name="pin_enter_hint">৪ ডিজিটের পিন</string>
+    <string name="pin_mismatch">পিন মেলেনি। আবার চেষ্টা করুন।</string>
+    <string name="pin_incorrect">ভুল পিন। আবার চেষ্টা করুন।</string>
+    <string name="pin_saved">নিরাপত্তা পিন সফলভাবে সেট করা হয়েছে।</string>
+    <string name="pin_removed">নিরাপত্তা পিন মুছে ফেলা হয়েছে।</string>
+    <string name="lock_timeout_title">কতক্ষণ পর লক হবে</string>
+    <string name="lock_timeout_sub">অ্যাপ থেকে বের হওয়ার পর: %1$s</string>
+    <string name="lock_immediately">সাথে সাথে</string>
+    <string name="lock_15_seconds">১৫ সেকেন্ড পর</string>
+    <string name="lock_1_minute">১ মিনিট পর</string>
+    <string name="lock_5_minutes">৫ মিনিট পর</string>
+    <string name="change_in_app_pin">নিরাপত্তা পিন পরিবর্তন করুন</string>
+    <string name="remove_in_app_pin">নিরাপত্তা পিন মুছে ফেলুন</string>
+    <string name="device_lock_not_setup_msg">ফোনে ফিঙ্গারপ্রিন্ট বা স্ক্রিন লক সেট করা নেই। অ্যাপ লক সক্রিয় করতে ৪ ডিজিটের একটি পিন সেট করুন।</string>
+
+    <!-- Dialogs Common -->
+    <string name="btn_save">সংরক্ষণ করুন</string>
+    <string name="btn_cancel">বাতিল</string>
+    <string name="btn_delete">মুছে ফেলুন</string>
+    <string name="btn_update">হালনাগাদ</string>
+    <string name="btn_proceed">এগিয়ে যান</string>
+    <string name="btn_confirm">নিশ্চিত করুন</string>
+    <string name="btn_ok">ঠিক আছে</string>
+
+    <!-- Add Transaction Dialog -->
+    <string name="new_transaction">নতুন লেনদেন</string>
+    <string name="amount_bdt">টাকার পরিমাণ *</string>
+    <string name="amount_hint">যেমন: ৫০০</string>
+    <string name="category_label">ক্যাটাগরি *</string>
+    <string name="account_label">উৎস হিসাব *</string>
+    <string name="dest_account_label">গন্তব্য হিসাব (স্থানান্তরের জন্য) *</string>
+    <string name="date_label">তারিখ</string>
+    <string name="payment_method_label">পেমেন্ট মাধ্যম</string>
+    <string name="note_optional">নোট (ঐচ্ছিক)</string>
+    <string name="note_hint">যেমন: দুপুরের খাবার</string>
+    <string name="transaction_saved">লেনদেন সফলভাবে সংরক্ষণ করা হয়েছে।</string>
+    <string name="transaction_deleted">লেনদেন মুছে ফেলা হয়েছে এবং ব্যালেন্স সমন্বয় করা হয়েছে।</string>
+    <string name="delete_transaction">লেনদেন মুছে ফেলুন</string>
+    <string name="delete_transaction_confirm">আপনি কি নিশ্চিত যে %1$s এর %2$s টাকার এই লেনদেনটি মুছে ফেলতে চান? ব্যালেন্স স্বয়ংক্রিয়ভাবে সমন্বয় করা হবে।</string>
+    <string name="transaction_details">%1$s বিবরণ</string>
+    <string name="different_accounts_error">উৎস এবং গন্তব্য হিসাব অবশ্যই আলাদা হতে হবে।</string>
+    <string name="valid_amount_error">অনুগ্রহ করে একটি সঠিক ধনাত্মক টাকার পরিমাণ লিখুন।</string>
+    <string name="valid_account_error">অনুগ্রহ করে একটি সঠিক হিসাব নির্বাচন করুন।</string>
+
+    <!-- Add Account Dialog -->
+    <string name="add_account">নতুন হিসাব যোগ করুন</string>
+    <string name="account_name">হিসাবের নাম *</string>
+    <string name="account_name_hint">যেমন: সিটি ব্যাংক, বিকাশ, ক্যাশ ওয়ালেট</string>
+    <string name="account_type">হিসাবের ধরন *</string>
+    <string name="initial_balance">প্রারম্ভিক ব্যালেন্স</string>
+    <string name="account_name_required">হিসাবের নাম আবশ্যক।</string>
+    <string name="account_balance_updated">হিসাবের ব্যালেন্স হালনাগাদ করা হয়েছে।</string>
+
+    <!-- Budget Dialog -->
+    <string name="set_monthly_budget">মাসিক বাজেট নির্ধারণ</string>
+    <string name="monthly_limit">মাসিক সর্বোচ্চ সীমা *</string>
+    <string name="monthly_limit_hint">যেমন: ৫০০০</string>
+    <string name="budget_rollover_label">রোলওভার সক্রিয় করুন (অবশিষ্ট টাকা পরবর্তী মাসে যোগ হবে)</string>
+    <string name="valid_budget_error">অনুগ্রহ করে একটি সঠিক বাজেট সীমা লিখুন।</string>
+
+    <!-- Backup Password Dialogs -->
+    <string name="export_backup_title">এনক্রিপ্টেড ব্যাকআপ এক্সপোর্ট</string>
+    <string name="restore_backup_title">এনক্রিপ্টেড ব্যাকআপ রিস্টোর</string>
+    <string name="verify_backup_title">ব্যাকআপ ফাইলের সঠিকতা যাচাই</string>
+    <string name="backup_password_hint">ব্যাকআপ পাসওয়ার্ড লিখুন</string>
+    <string name="current_password_hint">বর্তমান পাসওয়ার্ড</string>
+    <string name="new_password_hint">নতুন পাসওয়ার্ড</string>
+    <string name="confirm_new_password_hint">নতুন পাসওয়ার্ড নিশ্চিত করুন</string>
+    <string name="password_min_length">পাসওয়ার্ড অন্তত ৬ অক্ষরের হতে হবে।</string>
+    <string name="passwords_do_not_match">নতুন দুটি পাসওয়ার্ড মেলেনি।</string>
+    <string name="password_changed">ব্যাকআপ পাসওয়ার্ড সফলভাবে পরিবর্তিত হয়েছে।</string>
+    <string name="incorrect_current_password">বর্তমান পাসওয়ার্ডটি সঠিক নয়।</string>
+    <string name="forgot_password_warning">জরুরি সতর্কতা: ভুলে যাওয়া ব্যাকআপ পাসওয়ার্ড পুনরুদ্ধার করার কোনো উপায় নেই। অনুগ্রহ করে এটি নিরাপদে সংরক্ষণ করুন।</string>
+    <string name="old_backups_warning">বিজ্ঞপ্তি: পাসওয়ার্ড পরিবর্তন করলে পূর্বের ব্যাকআপ ফাইলগুলো স্বয়ংক্রিয়ভাবে পরিবর্তিত হয় না। পূর্বের ব্যাকআপ খুলতে তৎকালীন পাসওয়ার্ড প্রয়োজন হবে।</string>
+    <string name="backup_success">এনক্রিপ্টেড ব্যাকআপ সফলভাবে সংরক্ষিত হয়েছে।</string>
+    <string name="backup_failed">ব্যাকআপ এক্সপোর্ট ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।</string>
+    <string name="restore_confirm_title">ডাটাবেস রিস্টোর নিশ্চিতকরণ</string>
+    <string name="restore_confirm_msg">রিস্টোর করলে বর্তমানের সকল তথ্য ব্যাকআপ ফাইলের তথ্য দ্বারা প্রতিস্থাপিত হবে। আপনি কি এগিয়ে যেতে চান?</string>
+    <string name="restore_success">ডাটাবেস সফলভাবে পুনরুদ্ধার করা হয়েছে।</string>
+    <string name="restore_failed">রিস্টোর ব্যর্থ হয়েছে! ভুল পাসওয়ার্ড অথবা ব্যাকআপ ফাইলটি ক্ষতিগ্রস্ত।</string>
+    <string name="verify_success">ব্যাকআপ ফাইলটি সম্পূর্ণ অক্ষত ও সঠিক রয়েছে।</string>
+    <string name="verify_failed">যাচাইকরণ ব্যর্থ হয়েছে: %1$s</string>
+    <string name="no_transactions_export">এক্সপোর্ট করার মতো কোনো লেনদেন পাওয়া যায়নি।</string>
+    <string name="export_failed">এক্সপোর্ট ব্যর্থ হয়েছে: %1$s</string>
+
+    <!-- Additional Features -->
+    <string name="btn_recurring_transactions">পুনরাবৃত্তিমূলক লেনদেন</string>
+    <string name="btn_savings_goals">সঞ্চয় লক্ষ্যমাত্রা</string>
+    <string name="btn_reconciliation">হিসাব সমন্বয় ও যাচাই</string>
+    <string name="add_recurring">পুনরাবৃত্তিমূলক সময়সূচি যোগ করুন</string>
+    <string name="recurring_title">সময়সূচির শিরোনাম *</string>
+    <string name="recurring_title_hint">যেমন: মাসিক বাড়িভাড়া, ইন্টারনেট বিল</string>
+    <string name="frequency_label">পুনরাবৃত্তির সময়কাল *</string>
+    <string name="freq_daily">দৈনিক</string>
+    <string name="freq_weekly">সাপ্তাহিক</string>
+    <string name="freq_monthly">মাসিক</string>
+    <string name="freq_yearly">বার্ষিক</string>
+    <string name="auto_record_label">নির্দিষ্ট তারিখে লেনদেন স্বয়ংক্রিয়ভাবে যুক্ত করুন</string>
+    <string name="next_due_label">পরবর্তী তারিখ: %1$s</string>
+
+    <string name="add_savings_goal">নতুন সঞ্চয় লক্ষ্য যোগ করুন</string>
+    <string name="goal_title">লক্ষ্যের নাম *</string>
+    <string name="goal_title_hint">যেমন: জরুরি তহবিল, ল্যাপটপ ক্রয়</string>
+    <string name="target_amount">লক্ষ্যমাত্রার পরিমাণ *</string>
+    <string name="target_date">অর্জনের শেষ তারিখ</string>
+    <string name="contribute_to_goal">সঞ্চয়ে জমা করুন</string>
+    <string name="contribution_amount">জমার পরিমাণ *</string>
+    <string name="source_account">যে অ্যাকাউন্ট থেকে জমা হবে *</string>
+    <string name="goal_progress">সঞ্চিত: %1$s / %2$s (%3$s)</string>
+
+    <string name="reconciliation_title">অ্যাকাউন্ট ব্যালেন্স সমন্বয়</string>
+    <string name="actual_balance_label">হাতে বা ব্যাংকে থাকা প্রকৃত অর্থ *</string>
+    <string name="system_balance_label">সিস্টেমে হিসাবভুক্ত অর্থ: %1$s</string>
+    <string name="discrepancy_label">পার্থক্য বা অমিল: %1$s</string>
+    <string name="reconciliation_saved">সমন্বয়ের বিবরণ সংরক্ষিত হয়েছে।</string>
+
+    <!-- Theme Dialog Options -->
+    <string name="theme_dark">ডার্ক মোড</string>
+    <string name="theme_light">লাইট মোড</string>
+    <string name="theme_system">সিস্টেম ডিফল্ট</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_title">সেটিংস</string>
+    <string name="section_appearance_language">চেহারা ও ভাষা</string>
+    <string name="section_security_lock">নিরাপত্তা ও অ্যাপ লক</string>
+    <string name="section_backup_restore">অফলাইন এনক্রিপ্ট ব্যাকআপ ও রিস্টোর</string>
+    <string name="section_notifications">বিজ্ঞপ্তি ও রিমাইন্ডার</string>
+    <string name="section_data_recycle">ডাটা ম্যানেজমেন্ট ও রিসাইকেল বিন</string>
+    <string name="section_about">পয়শাকড়ি সম্পর্কে</string>
+    <string name="offline_privacy_desc">১০০% অফলাইন ও সম্পূর্ণ নিরাপদ। কোনো ক্লাউড সার্ভার বা ফায়ারবেস নেই। আপনার সমস্ত আর্থিক তথ্য ডিভাইসেই AES-256 এনক্রিপশনে সুরক্ষিত থাকে।</string>
+    <string name="debt_reminders_toggle">ধার ও দেনা ফেরত রিমাইন্ডার</string>
+    <string name="debt_reminders_toggle_sub">আজকের বা মেয়াদোত্তীর্ণ ধারের জন্য প্রতিদিন সকাল ৯টায় সতর্কবার্তা</string>
+    <string name="bill_reminders_toggle">নিয়মিত বিল ও কিস্তি রিমাইন্ডার</string>
+    <string name="bill_reminders_toggle_sub">নিয়মিত বিল বা খরচের তারিখ আসলে নোটিফিকেশন দিন</string>
+    <string name="recycle_bin_count">রিসাইকেল বিনে %1$dটি আইটেম আছে</string>
+    <string name="view_recycle_bin">রিসাইকেল বিন খুলুন</string>
+    <string name="app_version_name">পয়শাকড়ি v৪.০ (অফলাইন সংস্করণ)</string>
+    <string name="about_app_desc">একটি আধুনিক, সম্পূর্ণ অফলাইন ও ব্যক্তিগত হিসাব ব্যবস্থাপনা অ্যাপ। কোনো ক্লাউড ছাড়াই আপনার আর্থিক তথ্যের সম্পূর্ণ নিরাপত্তা নিশ্চিত করে।</string>
+    <string name="restore_preview_title">রিস্টোর প্রিভিউ</string>
+    <string name="restore_preview_content">এই ব্যাকআপ ফাইলে রয়েছে:\n• %1$dটি অ্যাকাউন্ট\n• %2$dটি লেনদেন\n• %3$dটি ঋণ/ধার\n• %4$dটি বাজেট\n\nডাটাবেস সংস্করণ: %5$d\n\nসতর্কতা: রিস্টোর সম্পন্ন হলে বর্তমান সকল তথ্য প্রতিস্থাপিত হবে। আপনি কি এগিয়ে যেতে চান?</string>
+
+    <!-- Cash Flow & Insights -->
+    <string name="cash_flow_forecast">ক্যাশ ফ্লো পূর্বাভাস</string>
+    <string name="cash_flow_forecast_sub">আসন্ন দিনগুলোতে আয়, ব্যয় ও ব্যালেন্সের সম্ভাব্য হিসাব</string>
+    <string name="forecast_7_days">পরবর্তী ৭ দিনের পূর্বাভাস</string>
+    <string name="forecast_30_days">পরবর্তী ৩০ দিনের পূর্বাভাস</string>
+    <string name="projected_income">প্রত্যাশিত আয়</string>
+    <string name="projected_expense">প্রত্যাশিত ব্যয়</string>
+    <string name="projected_net_change">সম্ভাব্য নগদ প্রবাহ</string>
+    <string name="projected_future_balance">সম্ভাব্য ব্যালেন্স</string>
+    <string name="spending_insights">স্মার্ট ব্যয় বিশ্লেষণ</string>
+    <string name="spending_increased">গত মাসের চেয়ে খরচ %1$s বেড়েছে (%2$s%%)</string>
+    <string name="spending_decreased">গত মাসের চেয়ে খরচ %1$s কমেছে (%2$s%%)</string>
+    <string name="spending_same">গত মাসের তুলনায় খরচ স্থিতিশীল রয়েছে</string>
+    <string name="spending_no_data">তুলনামূলক বিশ্লেষণের জন্য পর্যাপ্ত তথ্য নেই।</string>
+
+    <!-- Search & Filters -->
+    <string name="filter_account">অ্যাকাউন্ট বাছাই</string>
+    <string name="filter_date_range">তারিখের সীমা</string>
+    <string name="filter_sort">সাজানোর ধরন</string>
+    <string name="sort_newest">নতুন লেনদেন আগে</string>
+    <string name="sort_oldest">পুরানো লেনদেন আগে</string>
+    <string name="sort_highest">সর্বোচ্চ টাকার পরিমাণ</string>
+    <string name="sort_lowest">সর্বনিম্ন টাকার পরিমাণ</string>
+    <string name="clear_all_filters">ফিল্টার মুছুন</string>
+    <string name="all_accounts">সব অ্যাকাউন্ট</string>
+    <string name="custom_date_range">%1$s হতে %2$s</string>
+    <string name="start_date">শুরুর তারিখ</string>
+    <string name="end_date">শেষ তারিখ</string>
+
+    <!-- Reconciliation -->
+    <string name="reconcile_dialog_title">হিসাব সমন্বয় ও মিলকরণ</string>
+    <string name="reconcile_match">ব্যালেন্স পুরোপুরি মিলে গেছে! কোনো গরমিল নেই।</string>
+    <string name="reconcile_difference">অমিল: %1$s</string>
+    <string name="reconcile_create_adjustment">সমন্বয় লেনদেন তৈরি করুন</string>
+    <string name="reconcile_adjustment_created">সমন্বয় লেনদেন সফলভাবে যুক্ত হয়েছে।</string>
+
+    <!-- Repayments & Debt History -->
+    <string name="no_repayments_yet">এখনও কোনো ফেরত নথিভুক্ত করা হয়নি।</string>
+    <string name="no_original_date">তারিখ উল্লেখ নেই</string>
+    <string name="debt_original_date">নেওয়ার তারিখ: %1$s</string>
+    <string name="debt_start_date">শুরু: %1$s</string>
+    <string name="debt_due_date_label">ফেরতের শেষ তারিখ: %1$s</string>
+    <string name="ref_prefix">রেফারেন্স: %1$s</string>
+    <string name="debt_principal_sub">মূল ঋণ: %1$s • পরিশোধ: %2$s</string>
+    <string name="outstanding_balance">বকেয়া অর্থ: %1$s</string>
+    <string name="principal_amount">মোট ধারের পরিমাণ: %1$s</string>
+    <string name="total_repaid">পরিশোধিত অর্থ: %1$s</string>
+    <string name="counterparty_label">ব্যক্তি/প্রতিষ্ঠান: %1$s</string>
+    <string name="scheduled_items">আসন্ন লেনদেন</string>
+    <string name="export_pdf_report">আর্থিক প্রতিবেদন এক্সপোর্ট</string>
+
+    <!-- Reports Sections -->
+    <string name="reports_financial_overview">১. সামগ্রিক আর্থিক চিত্র</string>
+    <string name="reports_spending_analysis">২. ব্যয়ের বিশ্লেষণ</string>
+    <string name="reports_cash_flow_forecast">৩. পূর্বাভাস ও ক্যাশ ফ্লো</string>
+    <string name="reports_monthly_summaries">৪. মাসিক আর্থিক বিবরণী</string>
+    <string name="reports_recurring_txns">৫. পুনরাবৃত্তিমূলক লেনদেন</string>
+    <string name="reports_savings_goals">৬. সঞ্চয়ের লক্ষ্যমাত্রা</string>
+    <string name="reports_reconciliation">৭. হিসাব মিলকরণ ও সমন্বয়</string>
+    <string name="reports_data_export">৮. প্রতিবেদন ও তথ্য এক্সপোর্ট</string>
+    <string name="monthly_summary_desc">মাসিক আয়-ব্যয় ও সঞ্চয়ের তুলনামূলক হিসাব</string>
+    <string name="recurring_txns_desc">বেতন, ভাড়া, বিল ও নিয়মিত লেনদেন ব্যবস্থাপনা</string>
+    <string name="savings_goals_desc">সঞ্চয়ের লক্ষ্যমাত্রা ও অগ্রগতি পর্যবেক্ষণ</string>
+    <string name="reconciliation_desc">ব্যাংক স্টেটমেন্ট ও অ্যাপের ব্যালেন্স মিলকরণ</string>
+    <string name="export_csv_desc">সকল লেনদেন সিএসভি (CSV) ফাইলে সংরক্ষণ</string>
+    <string name="export_report_desc">পূর্ণাঙ্গ আর্থিক বিবরণী ও প্রতিবেদন তৈরি</string>
+    <string name="total_monthly_spending">মোট খরচ: %1$s</string>
+    <string name="net_monthly_savings">নিট সঞ্চয়: %1$s</string>
+
+    <!-- Categories Management -->
+    <string name="manage_categories">ক্যাটাগরি ব্যবস্থাপনা</string>
+    <string name="add_category">+ নতুন ক্যাটাগরি যোগ করুন</string>
+    <string name="category_name_hint">ক্যাটাগরির নাম</string>
+    <string name="category_type_income">আয়</string>
+    <string name="category_type_expense">ব্যয়</string>
+    <string name="delete_category_confirm">আপনি কি নিশ্চিত যে \'%1$s\' ক্যাটাগরি মুছে ফেলতে চান?</string>
+    <string name="category_added">\'%1$s\' ক্যাটাগরি সফলভাবে যোগ হয়েছে।</string>
+    <string name="category_deleted">ক্যাটাগরি মুছে ফেলা হয়েছে।</string>
+    <string name="category_exists">এই নামের ক্যাটাগরি ইতিমধ্যে বিদ্যমান।</string>
+    <string name="valid_category_error">অনুগ্রহ করে একটি সঠিক ক্যাটাগরির নাম লিখুন।</string>
+
+    <!-- Duplicate Detection -->
+    <string name="duplicate_transaction_title">অনুরূপ লেনদেন সনাক্ত হয়েছে</string>
+    <string name="duplicate_transaction_warning">এই অ্যাকাউন্টে %3$s তারিখে \'%2$s\' খাতের %1$s টাকার একটি লেনদেন আগেই আছে। আপনি কি তবুও এটি সংরক্ষণ করতে চান?</string>
+    <string name="btn_save_anyway">তবুও সংরক্ষণ করুন</string>
+
+    <!-- CSV Import -->
+    <string name="btn_import_csv">লেনদেন ইম্পোর্ট করুন (CSV)</string>
+    <string name="import_csv_title">CSV থেকে লেনদেন ইম্পোর্ট</string>
+    <string name="import_csv_select_account">ইম্পোর্ট করা লেনদেনের জন্য অ্যাকাউন্ট নির্বাচন করুন:</string>
+    <string name="import_csv_success">সফলভাবে %1$d টি লেনদেন ইম্পোর্ট করা হয়েছে।</string>
+    <string name="import_csv_failed">CSV ইম্পোর্ট ব্যর্থ হয়েছে: %1$s</string>
+
+    <!-- Backup Options -->
+    <string name="backup_share_option">ব্যাকআপ শেয়ার / পাঠান (গুগল ড্রাইভ, হোয়াটসঅ্যাপ, ফাইল ইত্যাদি)</string>
+    <string name="backup_saf_option">নির্দিষ্ট ফোল্ডারে সেভ করুন</string>
+    <string name="choose_backup_method">ব্যাকআপের গন্তব্য নির্বাচন করুন</string>
+    <string name="btn_auto_backup">ফোনের লোকাল স্টোরেজে তাৎক্ষণিক ব্যাকআপ</string>
+    <string name="auto_backup_success">এনক্রিপ্ট করা ব্যাকআপ তৈরি হয়েছে: %1$s</string>
+
+    <!-- Emergency Fund Calculator -->
+    <string name="emergency_fund_title">জরুরি তহবিল ক্যালকুলেটর</string>
+    <string name="emergency_fund_desc">আপনার মাসিক গড় ব্যয়ের ভিত্তিতে ৩-৬ মাসের নিরাপত্তা তহবিল: %1$s থেকে %2$s।</string>
+
+    <!-- Automatic Encrypted Backup Section -->
+    <string name="auto_backup_title">স্বয়ংক্রিয় এনক্রিপ্টেড ব্যাকআপ</string>
+    <string name="auto_backup_desc">আপনার নির্বাচিত নিরাপদ ফোল্ডারে স্বয়ংক্রিয়ভাবে এনক্রিপ্টেড ব্যাকআপ ফাইল সংরক্ষণ করুন।</string>
+    <string name="auto_backup_enable">স্বয়ংক্রিয় ব্যাকআপ সক্রিয় করুন</string>
+    <string name="backup_folder_label">ব্যাকআপের গন্তব্য ফোল্ডার</string>
+    <string name="select_backup_folder">ব্যাকআপ ফোল্ডার নির্বাচন করুন</string>
+    <string name="change_backup_folder">ফোল্ডার পরিবর্তন করুন</string>
+    <string name="backup_frequency_label">ব্যাকআপের ব্যবধান</string>
+    <string name="backup_freq_daily">প্রতিদিন (প্রস্তাবিত)</string>
+    <string name="backup_freq_3_days">প্রতি ৩ দিনে একবার</string>
+    <string name="backup_freq_weekly">সাপ্তাহিক</string>
+    <string name="backup_on_changes">গুরুত্বপূর্ণ পরিবর্তনে ব্যাকআপ নিন</string>
+    <string name="backup_on_changes_sub">নতুন লেনদেন বা ধারের পর ব্যাকগ্রাউন্ডে ব্যাকআপ সংরক্ষণ</string>
+    <string name="btn_backup_now">এখনই ব্যাকআপ নিন</string>
+    <string name="last_backup_label">সর্বশেষ ব্যাকআপ: %1$s</string>
+    <string name="last_backup_status_label">অবস্থা: %1$s</string>
+    <string name="next_backup_label">পরবর্তী সময়সূচি: %1$s</string>
+    <string name="backup_count_label">ফোল্ডারে %1$dটি ব্যাকআপ ফাইল রয়েছে</string>
+    <string name="folder_not_selected">কোনো ফোল্ডার নির্বাচন করা নেই</string>
+    <string name="setup_backup_pwd_required">অনুগ্রহ করে প্রথমে ব্যাকআপ সিকিউরিটিতে গিয়ে এনক্রিপশন পাসওয়ার্ড সেট করুন।</string>
+    <string name="backup_now_started">স্বয়ংক্রিয় ব্যাকআপ প্রক্রিয়া শুরু হয়েছে...</string>
+    <string name="folder_permission_persisted">ব্যাকআপ ফোল্ডার সফলভাবে অনুমোদিত ও সংরক্ষিত হয়েছে।</string>
+    <string name="disable_auto_backup_confirm">স্বয়ংক্রিয় ব্যাকআপ নিষ্ক্রিয় করতে চান?</string>
+</resources>

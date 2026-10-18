@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/bg_card"
+    android:layout_marginBottom="12dp">
+
+    <!-- Top Row: Type Badge + Person Name and Outstanding Balance -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="4dp">
+
+        <TextView
+            android:id="@+id/tvDebtDirection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LENT"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/income"
+            android:background="@drawable/bg_status_badge"
+            android:backgroundTint="@color/income_bg"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/tvPersonName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Person Name"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvDebtAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="৳ 1,000"
+            android:textColor="@color/income"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Principal & Paid Subtitle -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginBottom="6dp">
+
+        <TextView
+            android:id="@+id/tvDebtPrincipalSub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Principal: ৳ 1,000 • Paid: ৳ 0"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Origination and Due Dates Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="4dp">
+
+        <TextView
+            android:id="@+id/tvDebtDates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start: 2026-10-18 • Due: 2026-11-01"
+            android:textColor="@color/text_muted"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- Reference Row -->
+    <TextView
+        android:id="@+id/tvDebtReference"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ref: LN-1024"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:layout_marginBottom="4dp"
+        android:visibility="gone" />
+
+    <!-- Note -->
+    <TextView
+        android:id="@+id/tvDebtNote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Borrowed for emergency"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone" />
+
+    <!-- Divider / Bottom Action Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="2dp">
+
+        <TextView
+            android:id="@+id/tvDebtStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="@color/debt"
+            android:background="@drawable/bg_status_badge"
+            android:backgroundTint="@color/debt_bg"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btnMarkPaid"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="@string/record_repayment"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:backgroundTint="@color/primary"
+            android:paddingHorizontal="14dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:insetLeft="0dp"
+            android:insetRight="0dp" />
+    </LinearLayout>
+
+</LinearLayout>

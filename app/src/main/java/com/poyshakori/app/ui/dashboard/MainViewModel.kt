@@ -236,7 +236,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         tx.amount.toString().contains(query)
                 val matchesType = when (typeFilter) {
                     "ALL" -> true
-                    "LOAN", "DEBT" -> tx.type in listOf("LOAN_LEND", "LOAN_BORROW", "DEBT_REPAYMENT", "RECEIVABLE_REPAYMENT")
+                    "LOAN", "DEBT", "DEBT_LOAN", "DEBTS_AND_LOAN" ->
+                        tx.type in listOf("LOAN_LEND", "LOAN_BORROW", "DEBT_REPAYMENT", "RECEIVABLE_REPAYMENT", "DEBT", "RECEIVABLE") ||
+                        tx.type.startsWith("LOAN_") || tx.type.startsWith("DEBT_") || tx.type.startsWith("RECEIVABLE_") ||
+                        tx.reference?.startsWith("DEBT_") == true
                     else -> tx.type.equals(typeFilter, ignoreCase = true)
                 }
                 val matchesAccount = accountId == null || tx.accountId == accountId || tx.targetAccountId == accountId

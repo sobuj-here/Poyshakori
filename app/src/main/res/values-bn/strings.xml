@@ -16,6 +16,7 @@
     <string name="income">আয়</string>
     <string name="expense">খরচ</string>
     <string name="transfer">স্থানান্তর</string>
+    <string name="debts_and_loan">দেনা ও ঋণ</string>
     <string name="btn_quick_expense">- খরচ</string>
     <string name="btn_quick_income">+ আয়</string>
     <string name="btn_quick_transfer">⇄ স্থানান্তর</string>

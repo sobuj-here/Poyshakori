@@ -1,6 +1,7 @@
 package com.poyshakori.app.backup
 
 import android.content.Context
+import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -8,9 +9,9 @@ import com.poyshakori.app.data.database.AppDatabase
 import com.poyshakori.app.data.entity.BackupLogEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 class AutoBackupWorker(
     appContext: Context,
@@ -56,53 +57,32 @@ class AutoBackupWorker(
         // Flush active SQLite WAL transactions before backing up
         BackupManager.checkpointDatabase(context)
 
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val fileName = "poyshakori_backup_$timestamp.pbackup"
+        // Single unified backup file for automatic backups
+        val fileName = "poyshakori_auto_backup.pbackup"
 
-        val backupDoc = try {
-            folderDoc.createFile("application/octet-stream", fileName)
-        } catch (e: Exception) {
-            null
-        }
-
-        if (backupDoc == null) {
-            val errorMsg = "Unable to create backup file in target directory"
-            AutoBackupManager.updateLastBackupStatus(context, "FAILED: $errorMsg")
-            recordLog(errorMsg, "FAILED")
-            return@withContext Result.failure()
-        }
-
-        // Export encrypted backup directly to SAF OutputStream
-        val writeOk = try {
-            val os = context.contentResolver.openOutputStream(backupDoc.uri)
-            if (os != null) {
-                BackupManager.exportEncryptedBackup(context, password, os)
-            } else {
-                false
+        // 1. First encrypt backup to an internal cache temp file to guarantee atomic write and zero corruption
+        val tempFile = File(context.cacheDir, "temp_auto_backup.pbackup")
+        val writeTempOk = try {
+            FileOutputStream(tempFile).use { fos ->
+                BackupManager.exportEncryptedBackup(context, password, fos)
             }
         } catch (e: Exception) {
             e.printStackTrace()
             false
         }
 
-        if (!writeOk) {
-            backupDoc.delete()
-            val errorMsg = "Failed during encryption and disk writing"
+        if (!writeTempOk || !tempFile.exists() || tempFile.length() == 0L) {
+            tempFile.delete()
+            val errorMsg = "Failed during database encryption"
             AutoBackupManager.updateLastBackupStatus(context, "FAILED: $errorMsg")
             recordLog(errorMsg, "FAILED")
             return@withContext Result.failure()
         }
 
-        // Immediately verify backup integrity before confirming success
+        // 2. Immediately verify backup integrity on temp file before updating the target file
         val verifyResult = try {
-            val verifyIn = context.contentResolver.openInputStream(backupDoc.uri)
-            if (verifyIn != null) {
-                verifyIn.use { BackupManager.verifyBackupIntegrity(password, it) }
-            } else {
-                BackupManager.VerificationResult(
-                    BackupManager.VerificationStatus.ERROR,
-                    "Failed to read written backup for verification"
-                )
+            FileInputStream(tempFile).use { fis ->
+                BackupManager.verifyBackupIntegrity(password, fis)
             }
         } catch (e: Exception) {
             BackupManager.VerificationResult(
@@ -112,13 +92,62 @@ class AutoBackupWorker(
         }
 
         if (verifyResult.status != BackupManager.VerificationStatus.VALID) {
-            // Delete corrupt file immediately to protect storage integrity
-            backupDoc.delete()
+            tempFile.delete()
             val errorMsg = "Integrity verification failed: ${verifyResult.details}"
             AutoBackupManager.updateLastBackupStatus(context, "FAILED: $errorMsg")
             recordLog(errorMsg, "FAILED")
             return@withContext Result.failure()
         }
+
+        // 3. Find existing single backup file or create it in target directory
+        var backupDoc = folderDoc.findFile(fileName)
+        if (backupDoc == null) {
+            backupDoc = try {
+                folderDoc.createFile("application/octet-stream", fileName)
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+        if (backupDoc == null) {
+            tempFile.delete()
+            val errorMsg = "Unable to create backup file in target directory"
+            AutoBackupManager.updateLastBackupStatus(context, "FAILED: $errorMsg")
+            recordLog(errorMsg, "FAILED")
+            return@withContext Result.failure()
+        }
+
+        // 4. Copy verified temp backup to the single SAF destination
+        val writeSafOk = try {
+            val os = context.contentResolver.openOutputStream(backupDoc.uri, "wt")
+                ?: context.contentResolver.openOutputStream(backupDoc.uri)
+            if (os != null) {
+                os.use { out ->
+                    FileInputStream(tempFile).use { input ->
+                        input.copyTo(out)
+                        out.flush()
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            tempFile.delete()
+        }
+
+        if (!writeSafOk) {
+            val errorMsg = "Failed writing backup to target destination"
+            AutoBackupManager.updateLastBackupStatus(context, "FAILED: $errorMsg")
+            recordLog(errorMsg, "FAILED")
+            return@withContext Result.failure()
+        }
+
+        // 5. Clean up any previous separate/timestamped auto backup files so only ONE single file remains
+        cleanOldAutoBackupFiles(folderDoc, backupDoc.uri)
 
         // Record successful backup in database
         val fileSize = backupDoc.length()
@@ -126,9 +155,6 @@ class AutoBackupWorker(
         recordLog(fileName, "SUCCESS", backupDoc.uri.toString(), successNotes)
 
         AutoBackupManager.recordSuccessfulBackup(context, fileName)
-
-        // Safe retention cleanup: keep recent 7 backups, never delete only valid backup
-        applyRetentionPolicy(folderDoc)
 
         Result.success()
     }
@@ -154,24 +180,20 @@ class AutoBackupWorker(
         }
     }
 
-    private fun applyRetentionPolicy(folderDoc: DocumentFile) {
+    private fun cleanOldAutoBackupFiles(folderDoc: DocumentFile, currentBackupUri: Uri) {
         try {
             val files = folderDoc.listFiles()
-                .filter { it.isFile && (it.name?.startsWith("poyshakori_") == true) && (it.name?.endsWith(".pbackup") == true || it.name?.endsWith(".bak") == true) }
-                .sortedByDescending { it.lastModified() }
-
-            val maxRetention = 7
-            if (files.size > maxRetention) {
-                // Delete older files beyond retention limit, guaranteeing at least 2 most recent remain
-                for (i in maxRetention until files.size) {
-                    files[i].delete()
+            for (file in files) {
+                if (file.isFile && file.uri != currentBackupUri) {
+                    val name = file.name ?: ""
+                    // Delete previous separate timestamped auto-backups or duplicate files
+                    if ((name.startsWith("poyshakori_backup_") || name.startsWith("poyshakori_auto_backup")) &&
+                        (name.endsWith(".pbackup") || name.endsWith(".bak"))) {
+                        file.delete()
+                    }
                 }
             }
-
-            // Update remaining backup count
-            val remaining = folderDoc.listFiles()
-                .count { it.isFile && (it.name?.startsWith("poyshakori_") == true) && (it.name?.endsWith(".pbackup") == true || it.name?.endsWith(".bak") == true) }
-            AutoBackupManager.updateBackupCount(applicationContext, remaining)
+            AutoBackupManager.updateBackupCount(applicationContext, 1)
         } catch (e: Exception) {
             e.printStackTrace()
         }

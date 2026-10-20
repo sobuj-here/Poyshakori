@@ -485,8 +485,9 @@ class MainActivity : AppCompatActivity() {
         val btnExpense = findViewById<Button>(R.id.btnFilterExpense)
         val btnIncome = findViewById<Button>(R.id.btnFilterIncome)
         val btnTransfer = findViewById<Button>(R.id.btnFilterTransfer)
+        val btnDebtLoan = findViewById<Button>(R.id.btnFilterDebtLoan)
 
-        val filterButtons = listOf(btnAll, btnExpense, btnIncome, btnTransfer)
+        val filterButtons = listOf(btnAll, btnExpense, btnIncome, btnTransfer, btnDebtLoan)
 
         fun updateFilterUi(selectedIndex: Int) {
             for (i in filterButtons.indices) {
@@ -515,6 +516,10 @@ class MainActivity : AppCompatActivity() {
         btnTransfer.setOnClickListener {
             viewModel.setTypeFilter("TRANSFER")
             updateFilterUi(3)
+        }
+        btnDebtLoan.setOnClickListener {
+            viewModel.setTypeFilter("DEBT_LOAN")
+            updateFilterUi(4)
         }
 
         val btnFilterDateRange = findViewById<MaterialButton>(R.id.btnFilterDateRange)

@@ -16,6 +16,7 @@
     <string name="income">Income</string>
     <string name="expense">Expense</string>
     <string name="transfer">Transfer</string>
+    <string name="debts_and_loan">Debts &amp; Loan</string>
     <string name="btn_quick_expense">- Expense</string>
     <string name="btn_quick_income">+ Income</string>
     <string name="btn_quick_transfer">⇄ Transfer</string>

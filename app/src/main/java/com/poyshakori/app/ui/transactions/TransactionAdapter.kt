@@ -79,7 +79,7 @@ class TransactionAdapter(
             val formattedAmt = CurrencyFormatter.formatAmount(itemView.context, transaction.amount)
 
             when (transaction.type) {
-                "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> {
+                "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT", "RECEIVABLE" -> {
                     tvAmount.text = "+ $formattedAmt"
                     val color = ContextCompat.getColor(itemView.context, R.color.income)
                     tvAmount.setTextColor(color)
@@ -87,7 +87,7 @@ class TransactionAdapter(
                     ivTypeIcon.setImageResource(iconRes)
                     ivTypeIcon.imageTintList = ColorStateList.valueOf(color)
                 }
-                "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> {
+                "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT", "DEBT" -> {
                     tvAmount.text = "- $formattedAmt"
                     val color = ContextCompat.getColor(itemView.context, R.color.expense)
                     tvAmount.setTextColor(color)

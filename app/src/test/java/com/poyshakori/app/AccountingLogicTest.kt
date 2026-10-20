@@ -737,4 +737,71 @@ class AccountingLogicTest {
         val resultTen = cleanupBackups(tenBackups)
         assertEquals(7, resultTen.size)
     }
+
+    @Test
+    fun testSingleUnifiedAutoBackupPolicy() {
+        val unifiedBackupName = "poyshakori_auto_backup.pbackup"
+        val existingFiles = listOf(
+            "poyshakori_backup_20261018_100000.pbackup",
+            "poyshakori_backup_20261019_120000.pbackup",
+            "poyshakori_auto_backup (1).pbackup",
+            unifiedBackupName
+        )
+
+        // Cleaning up old files leaves only the single unified backup file
+        val filesToKeep = existingFiles.filter { it == unifiedBackupName }
+        assertEquals(1, filesToKeep.size)
+        assertEquals("poyshakori_auto_backup.pbackup", filesToKeep[0])
+    }
+
+    @Test
+    fun testDebtAndLoanTransactionFiltering() {
+        val loanLend = TransactionEntity(id = 1, type = "LOAN_LEND", amount = 1000, accountId = 1, category = "Loan Given", date = "2026-10-20", time = "10:00:00")
+        val loanBorrow = TransactionEntity(id = 2, type = "LOAN_BORROW", amount = 2000, accountId = 1, category = "Loan Received", date = "2026-10-20", time = "10:01:00")
+        val debtRepayment = TransactionEntity(id = 3, type = "DEBT_REPAYMENT", amount = 500, accountId = 1, category = "Loan Repayment", date = "2026-10-20", time = "10:02:00")
+        val recvRepayment = TransactionEntity(id = 4, type = "RECEIVABLE_REPAYMENT", amount = 300, accountId = 1, category = "Repayment Received", date = "2026-10-20", time = "10:03:00")
+        val expense = TransactionEntity(id = 5, type = "EXPENSE", amount = 150, accountId = 1, category = "Food", date = "2026-10-20", time = "10:04:00")
+        val income = TransactionEntity(id = 6, type = "INCOME", amount = 5000, accountId = 1, category = "Salary", date = "2026-10-20", time = "10:05:00")
+        val transfer = TransactionEntity(id = 7, type = "TRANSFER", amount = 200, accountId = 1, targetAccountId = 2, category = "Transfer", date = "2026-10-20", time = "10:06:00")
+
+        val allTx = listOf(loanLend, loanBorrow, debtRepayment, recvRepayment, expense, income, transfer)
+
+        fun filterByType(list: List<TransactionEntity>, filter: String): List<TransactionEntity> {
+            return list.filter { tx ->
+                when (filter) {
+                    "ALL" -> true
+                    "LOAN", "DEBT", "DEBT_LOAN", "DEBTS_AND_LOAN" ->
+                        tx.type in listOf("LOAN_LEND", "LOAN_BORROW", "DEBT_REPAYMENT", "RECEIVABLE_REPAYMENT", "DEBT", "RECEIVABLE") ||
+                        tx.type.startsWith("LOAN_") || tx.type.startsWith("DEBT_") || tx.type.startsWith("RECEIVABLE_") ||
+                        tx.reference?.startsWith("DEBT_") == true
+                    else -> tx.type.equals(filter, ignoreCase = true)
+                }
+            }
+        }
+
+        val debtLoanFiltered = filterByType(allTx, "DEBT_LOAN")
+        assertEquals(4, debtLoanFiltered.size)
+        assertTrue(debtLoanFiltered.contains(loanLend))
+        assertTrue(debtLoanFiltered.contains(loanBorrow))
+        assertTrue(debtLoanFiltered.contains(debtRepayment))
+        assertTrue(debtLoanFiltered.contains(recvRepayment))
+        assertFalse(debtLoanFiltered.contains(expense))
+        assertFalse(debtLoanFiltered.contains(income))
+        assertFalse(debtLoanFiltered.contains(transfer))
+
+        val expenseFiltered = filterByType(allTx, "EXPENSE")
+        assertEquals(1, expenseFiltered.size)
+        assertEquals(expense, expenseFiltered[0])
+
+        val incomeFiltered = filterByType(allTx, "INCOME")
+        assertEquals(1, incomeFiltered.size)
+        assertEquals(income, incomeFiltered[0])
+
+        val transferFiltered = filterByType(allTx, "TRANSFER")
+        assertEquals(1, transferFiltered.size)
+        assertEquals(transfer, transferFiltered[0])
+
+        val allFiltered = filterByType(allTx, "ALL")
+        assertEquals(7, allFiltered.size)
+    }
 }

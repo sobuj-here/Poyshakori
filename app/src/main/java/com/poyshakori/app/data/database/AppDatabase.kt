@@ -205,6 +205,76 @@ abstract class AppDatabase : RoomDatabase() {
                 try {
                     db.execSQL("ALTER TABLE transactions ADD COLUMN serviceCharge REAL NOT NULL DEFAULT 0.0")
                 } catch (_: Exception) {}
+                migrateAccountsTableToReal(db)
+            }
+        }
+
+        private fun migrateAccountsTableToReal(db: SupportSQLiteDatabase) {
+            try {
+                val checkCursor = db.query("SELECT sql FROM sqlite_master WHERE type='table' AND name='accounts'")
+                var tableSql: String? = null
+                if (checkCursor.moveToFirst()) {
+                    tableSql = checkCursor.getString(0)
+                }
+                checkCursor.close()
+
+                if (tableSql != null) {
+                    val infoCursor = db.query("PRAGMA table_info(accounts)")
+                    var needsRebuild = false
+                    var hasActive = false
+                    var hasCreatedAt = false
+                    var hasUpdatedAt = false
+                    while (infoCursor.moveToNext()) {
+                        val colName = infoCursor.getString(1)
+                        val colType = infoCursor.getString(2)
+                        if (colName.equals("openingBalance", ignoreCase = true) && !colType.equals("REAL", ignoreCase = true)) {
+                            needsRebuild = true
+                        }
+                        if (colName.equals("currentBalance", ignoreCase = true) && !colType.equals("REAL", ignoreCase = true)) {
+                            needsRebuild = true
+                        }
+                        if (colName.equals("serviceCharge", ignoreCase = true)) {
+                            needsRebuild = true
+                        }
+                        if (colName.equals("active", ignoreCase = true)) hasActive = true
+                        if (colName.equals("createdAt", ignoreCase = true)) hasCreatedAt = true
+                        if (colName.equals("updatedAt", ignoreCase = true)) hasUpdatedAt = true
+                    }
+                    infoCursor.close()
+
+                    if (needsRebuild) {
+                        db.execSQL("""
+                            CREATE TABLE IF NOT EXISTS ccounts_migration_temp (
+                                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                                
+ame TEXT NOT NULL,
+                                	ype TEXT NOT NULL,
+                                openingBalance REAL NOT NULL DEFAULT 0.0,
+                                currentBalance REAL NOT NULL DEFAULT 0.0,
+                                createdAt INTEGER NOT NULL DEFAULT 0,
+                                updatedAt INTEGER NOT NULL DEFAULT 0,
+                                ctive INTEGER NOT NULL DEFAULT 1
+                            )
+                        """.trimIndent())
+
+                        val activeExpr = if (hasActive) "COALESCE(ctive, 1)" else "1"
+                        val createdAtExpr = if (hasCreatedAt) "COALESCE(createdAt, 0)" else "0"
+                        val updatedAtExpr = if (hasUpdatedAt) "COALESCE(updatedAt, 0)" else "0"
+
+                        db.execSQL("""
+                            INSERT INTO ccounts_migration_temp (id, 
+ame, 	ype, openingBalance, currentBalance, createdAt, updatedAt, ctive)
+                            SELECT id, 
+ame, 	ype, CAST(openingBalance AS REAL), CAST(currentBalance AS REAL), $createdAtExpr, $updatedAtExpr, $activeExpr
+                            FROM ccounts
+                        """.trimIndent())
+
+                        db.execSQL("DROP TABLE ccounts")
+                        db.execSQL("ALTER TABLE ccounts_migration_temp RENAME TO ccounts")
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 
@@ -220,6 +290,7 @@ abstract class AppDatabase : RoomDatabase() {
             try {
                 db.execSQL("ALTER TABLE transactions ADD COLUMN serviceCharge REAL NOT NULL DEFAULT 0.0")
             } catch (_: Exception) {}
+            migrateAccountsTableToReal(db)
             try {
                 db.execSQL("ALTER TABLE budgets ADD COLUMN rollover INTEGER NOT NULL DEFAULT 0")
             } catch (_: Exception) {}

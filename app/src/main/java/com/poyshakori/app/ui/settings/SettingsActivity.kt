@@ -585,9 +585,8 @@ class SettingsActivity : AppCompatActivity() {
                 } else {
                     // Option 2: SAF Storage Access
                     pendingExportPassword = password
-                    val dateStr = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
                     try {
-                        exportBackupLauncher.launch("poyshakori_backup_$dateStr.bak")
+                        exportBackupLauncher.launch("poyshakori_backup.pbackup")
                     } catch (e: Exception) {
                         Toast.makeText(this, "Storage access unavailable. Using direct export...", Toast.LENGTH_SHORT).show()
                         executeShareBackup(password)
@@ -626,10 +625,10 @@ class SettingsActivity : AppCompatActivity() {
                 val success = BackupManager.exportEncryptedBackup(this@SettingsActivity, password, outputStream)
                 withContext(Dispatchers.Main) {
                     if (success) {
-                        viewModel.logBackupOperation("poyshakori_backup.bak", uri.toString(), "EXPORT", "SUCCESS")
+                        viewModel.logBackupOperation("poyshakori_backup.pbackup", uri.toString(), "EXPORT", "SUCCESS")
                         Toast.makeText(this@SettingsActivity, getString(R.string.backup_success), Toast.LENGTH_LONG).show()
                     } else {
-                        viewModel.logBackupOperation("poyshakori_backup.bak", uri.toString(), "EXPORT", "FAILED")
+                        viewModel.logBackupOperation("poyshakori_backup.pbackup", uri.toString(), "EXPORT", "FAILED")
                         Toast.makeText(this@SettingsActivity, getString(R.string.backup_failed), Toast.LENGTH_SHORT).show()
                     }
                 }

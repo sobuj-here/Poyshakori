@@ -57,8 +57,8 @@ class AutoBackupWorker(
         // Flush active SQLite WAL transactions before backing up
         BackupManager.checkpointDatabase(context)
 
-        // Single unified backup file for automatic backups
-        val fileName = "poyshakori_auto_backup.pbackup"
+        // Single unified backup file for backups
+        val preferredFileName = "poyshakori_backup.pbackup"
 
         // 1. First encrypt backup to an internal cache temp file to guarantee atomic write and zero corruption
         val tempFile = File(context.cacheDir, "temp_auto_backup.pbackup")
@@ -99,11 +99,16 @@ class AutoBackupWorker(
             return@withContext Result.failure()
         }
 
-        // 3. Find existing single backup file or create it in target directory
-        var backupDoc = folderDoc.findFile(fileName)
+        // 3. Find existing single backup file to reuse/overwrite, or create single unified file
+        var backupDoc = folderDoc.findFile(preferredFileName)
+            ?: folderDoc.findFile("poyshakori_backup.bak")
+            ?: folderDoc.findFile("poyshakori_auto_backup.pbackup")
+
+        val fileName = backupDoc?.name ?: preferredFileName
+
         if (backupDoc == null) {
             backupDoc = try {
-                folderDoc.createFile("application/octet-stream", fileName)
+                folderDoc.createFile("application/octet-stream", preferredFileName)
             } catch (e: Exception) {
                 null
             }
@@ -186,8 +191,8 @@ class AutoBackupWorker(
             for (file in files) {
                 if (file.isFile && file.uri != currentBackupUri) {
                     val name = file.name ?: ""
-                    // Delete previous separate timestamped auto-backups or duplicate files
-                    if ((name.startsWith("poyshakori_backup_") || name.startsWith("poyshakori_auto_backup")) &&
+                    // Keep only one single unified backup file in folder
+                    if ((name.startsWith("poyshakori_backup") || name.startsWith("poyshakori_auto_backup")) &&
                         (name.endsWith(".pbackup") || name.endsWith(".bak"))) {
                         file.delete()
                     }

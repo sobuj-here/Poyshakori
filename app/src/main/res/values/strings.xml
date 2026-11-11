@@ -316,8 +316,8 @@
     <string name="bill_reminders_toggle_sub">Alerts when recurring payments or scheduled bills are due</string>
     <string name="recycle_bin_count">%1$d item(s) in Recycle Bin</string>
     <string name="view_recycle_bin">Open Recycle Bin</string>
-    <string name="app_version_name">Poyshakori v4.0 (Offline-First)</string>
-    <string name="about_app_desc">A clean, private personal finance and accounting manager built with Kotlin and Jetpack Compose/Views. Kept 100% offline on your device.</string>
+    <string name="app_version_name">Poyshakori</string>
+    <string name="about_app_desc">A private, offline-first personal accounting ledger. Your financial records stay securely on your device with complete peace of mind.</string>
     <string name="restore_preview_title">Restore Preview</string>
     <string name="restore_preview_content">The selected backup contains:\n• %1$d Accounts\n• %2$d Transactions\n• %3$d Debts/Loans\n• %4$d Budgets\n\nDatabase Version: %5$d\n\nWarning: Restoring will overwrite all existing records on this device. Do you want to proceed?</string>
 

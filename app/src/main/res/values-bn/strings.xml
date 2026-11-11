@@ -316,8 +316,8 @@
     <string name="bill_reminders_toggle_sub">নিয়মিত বিল বা খরচের তারিখ আসলে নোটিফিকেশন দিন</string>
     <string name="recycle_bin_count">রিসাইকেল বিনে %1$dটি আইটেম আছে</string>
     <string name="view_recycle_bin">রিসাইকেল বিন খুলুন</string>
-    <string name="app_version_name">পয়শাকড়ি v৪.০ (অফলাইন সংস্করণ)</string>
-    <string name="about_app_desc">একটি আধুনিক, সম্পূর্ণ অফলাইন ও ব্যক্তিগত হিসাব ব্যবস্থাপনা অ্যাপ। কোনো ক্লাউড ছাড়াই আপনার আর্থিক তথ্যের সম্পূর্ণ নিরাপত্তা নিশ্চিত করে।</string>
+    <string name="app_version_name">পয়শাকড়ি</string>
+    <string name="about_app_desc">সম্পূর্ণ নিরাপদ ও অফলাইন ব্যক্তিগত হিসাবের খাতা। কোনো প্রকার ক্লাউড ছাড়াই আপনার যাবতীয় আর্থিক হিসাব আপনার ফোনেই সুরক্ষিত থাকে।</string>
     <string name="restore_preview_title">রিস্টোর প্রিভিউ</string>
     <string name="restore_preview_content">এই ব্যাকআপ ফাইলে রয়েছে:\n• %1$dটি অ্যাকাউন্ট\n• %2$dটি লেনদেন\n• %3$dটি ঋণ/ধার\n• %4$dটি বাজেট\n\nডাটাবেস সংস্করণ: %5$d\n\nসতর্কতা: রিস্টোর সম্পন্ন হলে বর্তমান সকল তথ্য প্রতিস্থাপিত হবে। আপনি কি এগিয়ে যেতে চান?</string>
 

@@ -140,9 +140,8 @@ object BackupManager {
             val dbFile = context.getDatabasePath("poyshakori_db")
             if (!dbFile.exists() || dbFile.length() == 0L) return null
 
-            val dateStr = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
             val exportDir = File(context.cacheDir, "backups").apply { mkdirs() }
-            val backupFile = File(exportDir, "poyshakori_backup_$dateStr.bak")
+            val backupFile = File(exportDir, "poyshakori_backup.pbackup")
 
             FileOutputStream(backupFile).use { fos ->
                 val ok = exportEncryptedBackup(context, password, fos)
@@ -183,10 +182,9 @@ object BackupManager {
      */
     fun autoBackupToAppStorage(context: Context, password: String): File? {
         return try {
-            val dateStr = SimpleDateFormat("yyyyMMdd_HHmm", Locale.getDefault()).format(Date())
             val backupDir = context.getExternalFilesDir("backups") ?: File(context.filesDir, "backups")
             backupDir.mkdirs()
-            val backupFile = File(backupDir, "poyshakori_autobackup_$dateStr.bak")
+            val backupFile = File(backupDir, "poyshakori_backup.pbackup")
 
             FileOutputStream(backupFile).use { fos ->
                 val ok = exportEncryptedBackup(context, password, fos)
@@ -447,9 +445,8 @@ object BackupManager {
                     `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                     `name` TEXT NOT NULL,
                     `type` TEXT NOT NULL,
-                    `openingBalance` INTEGER NOT NULL,
-                    `currentBalance` INTEGER NOT NULL,
-                    `serviceCharge` REAL NOT NULL DEFAULT 0.0,
+                    `openingBalance` REAL NOT NULL,
+                    `currentBalance` REAL NOT NULL,
                     `createdAt` INTEGER NOT NULL,
                     `updatedAt` INTEGER NOT NULL,
                     `active` INTEGER NOT NULL
@@ -595,10 +592,64 @@ object BackupManager {
             safeAddColumn(db, "debts", "accountId INTEGER DEFAULT NULL")
             safeAddColumn(db, "debts", "createdAt INTEGER NOT NULL DEFAULT 0")
             safeAddColumn(db, "accounts", "active INTEGER NOT NULL DEFAULT 1")
-            safeAddColumn(db, "accounts", "openingBalance INTEGER NOT NULL DEFAULT 0")
-            safeAddColumn(db, "accounts", "currentBalance INTEGER NOT NULL DEFAULT 0")
+            safeAddColumn(db, "accounts", "openingBalance REAL NOT NULL DEFAULT 0.0")
+            safeAddColumn(db, "accounts", "currentBalance REAL NOT NULL DEFAULT 0.0")
             safeAddColumn(db, "accounts", "createdAt INTEGER NOT NULL DEFAULT 0")
             safeAddColumn(db, "accounts", "updatedAt INTEGER NOT NULL DEFAULT 0")
+
+            // Rebuild accounts table if openingBalance or currentBalance is INTEGER, or if serviceCharge is erroneously present
+            try {
+                val cursor = db.rawQuery("PRAGMA table_info(accounts)", null)
+                var needsAccountsRebuild = false
+                var hasActive = false
+                var hasCreatedAt = false
+                var hasUpdatedAt = false
+                while (cursor.moveToNext()) {
+                    val colName = cursor.getString(1)
+                    val colType = cursor.getString(2)
+                    if (colName.equals("openingBalance", ignoreCase = true) && !colType.equals("REAL", ignoreCase = true)) {
+                        needsAccountsRebuild = true
+                    }
+                    if (colName.equals("currentBalance", ignoreCase = true) && !colType.equals("REAL", ignoreCase = true)) {
+                        needsAccountsRebuild = true
+                    }
+                    if (colName.equals("serviceCharge", ignoreCase = true)) {
+                        needsAccountsRebuild = true
+                    }
+                    if (colName.equals("active", ignoreCase = true)) hasActive = true
+                    if (colName.equals("createdAt", ignoreCase = true)) hasCreatedAt = true
+                    if (colName.equals("updatedAt", ignoreCase = true)) hasUpdatedAt = true
+                }
+                cursor.close()
+
+                if (needsAccountsRebuild) {
+                    db.execSQL("""
+                        CREATE TABLE IF NOT EXISTS `accounts_migration_temp` (
+                            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                            `name` TEXT NOT NULL,
+                            `type` TEXT NOT NULL,
+                            `openingBalance` REAL NOT NULL DEFAULT 0.0,
+                            `currentBalance` REAL NOT NULL DEFAULT 0.0,
+                            `createdAt` INTEGER NOT NULL DEFAULT 0,
+                            `updatedAt` INTEGER NOT NULL DEFAULT 0,
+                            `active` INTEGER NOT NULL DEFAULT 1
+                        )
+                    """.trimIndent())
+
+                    val activeExpr = if (hasActive) "COALESCE(`active`, 1)" else "1"
+                    val createdAtExpr = if (hasCreatedAt) "COALESCE(`createdAt`, 0)" else "0"
+                    val updatedAtExpr = if (hasUpdatedAt) "COALESCE(`updatedAt`, 0)" else "0"
+
+                    db.execSQL("""
+                        INSERT INTO `accounts_migration_temp` (`id`, `name`, `type`, `openingBalance`, `currentBalance`, `createdAt`, `updatedAt`, `active`)
+                        SELECT `id`, `name`, `type`, CAST(`openingBalance` AS REAL), CAST(`currentBalance` AS REAL), $createdAtExpr, $updatedAtExpr, $activeExpr
+                        FROM `accounts`
+                    """.trimIndent())
+
+                    db.execSQL("DROP TABLE `accounts`")
+                    db.execSQL("ALTER TABLE `accounts_migration_temp` RENAME TO `accounts`")
+                }
+            } catch (_: Exception) {}
             safeAddColumn(db, "transactions", "targetAccountId INTEGER DEFAULT NULL")
             safeAddColumn(db, "transactions", "reference TEXT DEFAULT NULL")
             safeAddColumn(db, "transactions", "paymentMethod TEXT NOT NULL DEFAULT 'Cash'")
@@ -677,16 +728,16 @@ object BackupManager {
 
             // 4. Room master table and identity hash
             db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY, identity_hash TEXT)")
-            db.execSQL("INSERT OR REPLACE INTO room_master_table (id, identity_hash) VALUES (42, '684819eb81b810d4fdec51d8ea807660')")
+            db.execSQL("INSERT OR REPLACE INTO room_master_table (id, identity_hash) VALUES (42, '0574fb0295a8f70ec038f9e76d478d51')")
 
-            // 5. Version = 12
-            db.version = 12
+            // 5. Version = 13
+            db.version = 13
 
             // 6. Record restore success in backup_logs
             try {
                 db.execSQL(
                     "INSERT INTO backup_logs (filename, uriString, backupType, timestamp, status, notes) VALUES (?, ?, ?, ?, ?, ?)",
-                    arrayOf("restored_backup.pbackup", "SAF/Local", "RESTORE", System.currentTimeMillis(), "SUCCESS", "Restored and upgraded to Room v12")
+                    arrayOf("restored_backup.pbackup", "SAF/Local", "RESTORE", System.currentTimeMillis(), "SUCCESS", "Restored and upgraded to Room v13")
                 )
             } catch (_: Exception) {}
 

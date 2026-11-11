@@ -26,6 +26,10 @@ object DebtReminderHelper {
 
     const val CHANNEL_ID = "poyshakori_debt_reminders"
     const val NOTIFICATION_ID_BASE = 50000
+    private const val PREFS_THROTTLING = "poyshakori_debt_notification_throttling"
+    private const val MIN_COOLDOWN_MS = 4 * 60 * 60 * 1000L // 4 hours cooldown
+    private const val WINDOW_24H_MS = 24 * 60 * 60 * 1000L // 24 hours window
+    private const val MAX_NOTIFS_PER_24H = 3 // Max 3 times in 24 hours
 
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -43,10 +47,11 @@ object DebtReminderHelper {
     }
 
     /**
-     * Checks all pending debts and triggers a notification if dueDate == today ("date hole")
-     * or dueDate < today ("par hoie gele").
+     * Checks all pending debts and triggers a notification if dueDate == today
+     * or dueDate < today.
+     * Enforces throttling: max 3 notifications in 24h and at least 4 hours between alerts.
      */
-    fun checkAndNotifyDueDebts(context: Context) {
+    fun checkAndNotifyDueDebts(context: Context, force: Boolean = false) {
         createNotificationChannel(context)
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -54,27 +59,58 @@ object DebtReminderHelper {
                 val db = PoyshakoriApp.instance.database
                 val debts = db.debtDao().getAllDebts().firstOrNull() ?: emptyList()
                 val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                val prefs = context.getSharedPreferences(PREFS_THROTTLING, Context.MODE_PRIVATE)
+                val now = System.currentTimeMillis()
 
                 for (debt in debts) {
-                    if (debt.status == "PAID") continue
+                    if (debt.status == "PAID" || debt.paidAmount == debt.amount) {
+                        resetDebtNotificationThrottling(context, debt.id)
+                        continue
+                    }
                     if (debt.dueDate.isBlank()) continue
 
                     val outstanding = debt.amount - debt.paidAmount
                     if (outstanding <= 0) continue
-
-                    val formattedAmount = CurrencyFormatter.formatAmount(context, outstanding)
-                    val formattedDueDate = CurrencyFormatter.formatDate(context, debt.dueDate)
 
                     val isToday = debt.dueDate == today
                     val isOverdue = debt.dueDate < today
 
                     if (!isToday && !isOverdue) continue
 
+                    // Check throttling (unless forced e.g. from manual test)
+                    if (!force) {
+                        val lastNotified = prefs.getLong("last_notified_${debt.id}", 0L)
+                        if (now - lastNotified < MIN_COOLDOWN_MS) {
+                            // Within 4h cooldown - skip to avoid spam on frequent app launches
+                            continue
+                        }
+
+                        val windowStart = prefs.getLong("window_start_${debt.id}", 0L)
+                        val count = prefs.getInt("count_24h_${debt.id}", 0)
+                        val isNewWindow = (now - windowStart) > WINDOW_24H_MS
+                        val currentCount = if (isNewWindow) 0 else count
+
+                        if (currentCount >= MAX_NOTIFS_PER_24H) {
+                            // Max daily limit reached
+                            continue
+                        }
+
+                        // Update throttle state
+                        prefs.edit()
+                            .putLong("last_notified_${debt.id}", now)
+                            .putLong("window_start_${debt.id}", if (isNewWindow) now else windowStart)
+                            .putInt("count_24h_${debt.id}", currentCount + 1)
+                            .apply()
+                    }
+
+                    val formattedAmount = CurrencyFormatter.formatAmount(context, outstanding)
+                    val formattedDueDate = CurrencyFormatter.formatDate(context, debt.dueDate)
+
                     val title: String
                     val message: String
 
                     if (debt.type == "RECEIVABLE") {
-                        // Someone borrowed money from user / kew dhar niyeche
+                        // Receivable: Borrower owes money to user
                         if (isToday) {
                             title = context.getString(R.string.debt_reminder_due_today_title)
                             message = context.getString(R.string.debt_reminder_receivable_today, debt.personName, formattedAmount)
@@ -83,7 +119,7 @@ object DebtReminderHelper {
                             message = context.getString(R.string.debt_reminder_receivable_overdue, debt.personName, formattedAmount, formattedDueDate)
                         }
                     } else {
-                        // User borrowed money / ami dhar niyechi
+                        // Debt: User owes money to lender
                         if (isToday) {
                             title = context.getString(R.string.debt_reminder_due_today_title)
                             message = context.getString(R.string.debt_reminder_debt_today, debt.personName, formattedAmount)
@@ -99,6 +135,15 @@ object DebtReminderHelper {
                 e.printStackTrace()
             }
         }
+    }
+
+    fun resetDebtNotificationThrottling(context: Context, debtId: Long) {
+        val prefs = context.getSharedPreferences(PREFS_THROTTLING, Context.MODE_PRIVATE)
+        prefs.edit()
+            .remove("last_notified_$debtId")
+            .remove("window_start_$debtId")
+            .remove("count_24h_$debtId")
+            .apply()
     }
 
     private fun showNotification(context: Context, notificationId: Int, title: String, message: String) {

@@ -142,6 +142,27 @@
                 android:layout_height="48dp"
                 android:background="@drawable/bg_input_field"
                 android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/service_charge_label"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:layout_marginBottom="4dp" />
+
+            <EditText
+                android:id="@+id/etServiceCharge"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="@string/service_charge_hint"
+                android:textSize="14sp"
+                android:inputType="numberDecimal"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_muted"
+                android:background="@drawable/bg_input_field"
+                android:paddingHorizontal="12dp"
+                android:layout_marginBottom="12dp" />
         </LinearLayout>
 
         <!-- Date Input -->

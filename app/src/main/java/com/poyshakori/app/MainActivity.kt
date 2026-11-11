@@ -465,6 +465,7 @@ class MainActivity : AppCompatActivity() {
         debtAdapter = DebtAdapter(
             onItemClick = { debt -> showDebtDetailsDialog(debt) },
             onRecordRepaymentClick = { debt -> showRecordRepaymentDialog(debt) },
+            onRefundExcessClick = { debt -> showRefundExcessDialog(debt) },
             onItemLongClick = { debt -> confirmDeleteDebt(debt) }
         )
         rvDebts.layoutManager = LinearLayoutManager(this)
@@ -684,7 +685,7 @@ class MainActivity : AppCompatActivity() {
         // Observe Total Net Balance
         lifecycleScope.launch {
             viewModel.totalBalance.collectLatest { balance ->
-                val safeBalance = balance ?: 0L
+                val safeBalance = balance ?: 0.0
                 tvTotalBalance.text = CurrencyFormatter.formatAmount(this@MainActivity, safeBalance)
             }
         }
@@ -730,10 +731,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Observe Debts & Receivables
+        // Observe Debts & Receivables (Settled 0-balance debts are filtered out and archived in Transactions)
         lifecycleScope.launch {
             viewModel.allDebts.collectLatest { debts ->
-                debtAdapter.submitList(debts)
+                val activeDebts = debts.filter { it.amount != it.paidAmount }
+                debtAdapter.submitList(activeDebts)
+                findViewById<TextView>(R.id.tvEmptyDebts)?.visibility = if (activeDebts.isEmpty()) View.VISIBLE else View.GONE
             }
         }
         lifecycleScope.launch {
@@ -751,7 +754,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.totalBalance.collectLatest { balance ->
                 findViewById<TextView>(R.id.tvReportsNetBalance)?.text =
-                    CurrencyFormatter.formatAmount(this@MainActivity, balance ?: 0L)
+                    CurrencyFormatter.formatAmount(this@MainActivity, balance ?: 0.0)
             }
         }
         lifecycleScope.launch {
@@ -909,6 +912,7 @@ class MainActivity : AppCompatActivity() {
         val spinnerAccount = dialogView.findViewById<Spinner>(R.id.spinnerAccount)
         val spinnerTargetAccount = dialogView.findViewById<Spinner>(R.id.spinnerTargetAccount)
         val layoutTargetAccount = dialogView.findViewById<View>(R.id.layoutTargetAccount)
+        val etServiceCharge = dialogView.findViewById<EditText>(R.id.etServiceCharge)
         val etDate = dialogView.findViewById<EditText>(R.id.etDate)
         val etNote = dialogView.findViewById<EditText>(R.id.etNote)
         val btnSave = dialogView.findViewById<Button>(R.id.btnSaveTransaction)
@@ -1044,9 +1048,14 @@ class MainActivity : AppCompatActivity() {
                     targetAccountId = targetAccount.id
                 }
 
+                val serviceCharge = if (type == "TRANSFER") {
+                    CurrencyFormatter.parseAmountDouble(etServiceCharge?.text?.toString()?.trim() ?: "") ?: 0.0
+                } else 0.0
+
                 val transaction = TransactionEntity(
                     type = type,
                     amount = amount,
+                    serviceCharge = serviceCharge,
                     accountId = sourceAccount.id,
                     targetAccountId = targetAccountId,
                     category = category,
@@ -1093,9 +1102,15 @@ class MainActivity : AppCompatActivity() {
             val accounts = viewModel.allAccounts.firstOrNull() ?: emptyList()
             val accountName = accounts.find { it.id == transaction.accountId }?.name ?: transaction.paymentMethod
 
-            val details = "${getString(R.string.category_label)}: $localizedCat\n" +
-                    "${getString(R.string.amount_bdt)}: $formattedAmt\n" +
-                    "${getString(R.string.filter_account)}: $accountName\n" +
+            var details = "${getString(R.string.category_label)}: $localizedCat\n" +
+                    "${getString(R.string.amount_bdt)}: $formattedAmt\n"
+            if (transaction.type == "TRANSFER" && transaction.serviceCharge > 0.0) {
+                val feeStr = CurrencyFormatter.formatAmount(this@MainActivity, transaction.serviceCharge)
+                val totalWithFee = CurrencyFormatter.formatAmount(this@MainActivity, transaction.amount.toDouble() + transaction.serviceCharge)
+                details += "${getString(R.string.service_charge_display, feeStr)}\n"
+                details += "${getString(R.string.total_transferred_with_fee, totalWithFee)}\n"
+            }
+            details += "${getString(R.string.filter_account)}: $accountName\n" +
                     "${getString(R.string.date_label)}: $formattedDate ${transaction.time}\n" +
                     "${getString(R.string.note_optional)}: ${transaction.note ?: "—"}"
 
@@ -1157,8 +1172,8 @@ class MainActivity : AppCompatActivity() {
             val account = AccountEntity(
                 name = name,
                 type = type,
-                openingBalance = balance,
-                currentBalance = balance
+                openingBalance = balance.toDouble(),
+                currentBalance = balance.toDouble()
             )
 
             viewModel.insertAccount(account) {
@@ -1247,7 +1262,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun confirmDeleteAccount(account: AccountEntity) {
         lifecycleScope.launch {
-            if (account.currentBalance != 0L) {
+            if (Math.abs(account.currentBalance) > 0.001) {
                 val formattedBal = CurrencyFormatter.formatAmount(this@MainActivity, account.currentBalance)
                 AlertDialog.Builder(this@MainActivity)
                     .setTitle(getString(R.string.delete_account))
@@ -1501,11 +1516,35 @@ class MainActivity : AppCompatActivity() {
         val etAmount = EditText(this).apply {
             hint = getString(R.string.repayment_amount)
             inputType = InputType.TYPE_CLASS_NUMBER
-            setText(outstanding.toString())
+            setText(if (outstanding > 0) outstanding.toString() else "")
         }
         val spinnerAccounts = Spinner(this).apply {
             setPadding(0, 16, 0, 16)
         }
+        val etNewDueDate = EditText(this).apply {
+            hint = getString(R.string.new_due_date_optional)
+            isFocusable = false
+            isClickable = true
+            setPadding(0, 16, 0, 16)
+        }
+        var selectedNewDueDate: String? = null
+        val cal = Calendar.getInstance()
+        val dFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        etNewDueDate.setOnClickListener {
+            DatePickerDialog(
+                this@MainActivity,
+                { _, y, m, d ->
+                    cal.set(y, m, d)
+                    val datePicked = dFormat.format(cal.time)
+                    selectedNewDueDate = datePicked
+                    etNewDueDate.setText(datePicked)
+                },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
+
         val etNote = EditText(this).apply {
             hint = getString(R.string.debt_note_optional)
         }
@@ -1513,6 +1552,7 @@ class MainActivity : AppCompatActivity() {
         layout.addView(tvInfo)
         layout.addView(etAmount)
         layout.addView(spinnerAccounts)
+        layout.addView(etNewDueDate)
         layout.addView(etNote)
 
         lifecycleScope.launch {
@@ -1530,7 +1570,7 @@ class MainActivity : AppCompatActivity() {
             .setView(layout)
             .setPositiveButton(getString(R.string.btn_save)) { _, _ ->
                 val amt = CurrencyFormatter.parseAmount(etAmount.text.toString().trim())
-                if (amt == null || amt <= 0 || amt > outstanding) {
+                if (amt == null || amt <= 0) {
                     Toast.makeText(this, getString(R.string.valid_amount_error), Toast.LENGTH_SHORT).show()
                     return@setPositiveButton
                 }
@@ -1550,8 +1590,150 @@ class MainActivity : AppCompatActivity() {
                     val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
                     val note = etNote.text.toString().trim().ifEmpty { null }
 
-                    viewModel.recordDebtRepayment(debt.id, amt, selectedAcc.id, date, time, note) {
-                        Toast.makeText(this@MainActivity, getString(R.string.repayment_recorded), Toast.LENGTH_SHORT).show()
+                    viewModel.recordDebtRepayment(debt.id, amt, selectedAcc.id, date, time, note, selectedNewDueDate) {
+                        if (amt > outstanding) {
+                            val excess = amt - outstanding
+                            val excessStr = CurrencyFormatter.formatAmount(this@MainActivity, excess)
+                            Toast.makeText(this@MainActivity, "${getString(R.string.repayment_recorded)} (${getString(R.string.excess_note_label, excessStr)})", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(this@MainActivity, getString(R.string.repayment_recorded), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+            .setNegativeButton(getString(R.string.btn_cancel), null)
+            .show()
+    }
+
+    private fun showChangeDueDateDialog(debt: DebtEntity) {
+        val layout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(40, 20, 40, 20)
+        }
+
+        val tvCurrent = TextView(this).apply {
+            val currDue = if (debt.dueDate.isNotBlank()) CurrencyFormatter.formatDate(this@MainActivity, debt.dueDate) else getString(R.string.no_due_date)
+            text = "${getString(R.string.debt_due_date_label, currDue)}"
+            setPadding(0, 0, 0, 16)
+        }
+
+        val cal = Calendar.getInstance()
+        val dFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val etNewDate = EditText(this).apply {
+            hint = getString(R.string.new_due_date_optional)
+            isFocusable = false
+            isClickable = true
+            if (debt.dueDate.isNotBlank()) {
+                setText(debt.dueDate)
+            } else {
+                setText(dFormat.format(cal.time))
+            }
+            setOnClickListener {
+                DatePickerDialog(
+                    this@MainActivity,
+                    { _, y, m, d ->
+                        cal.set(y, m, d)
+                        setText(dFormat.format(cal.time))
+                    },
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
+        }
+
+        val etReason = EditText(this).apply {
+            hint = getString(R.string.reason_optional)
+            setPadding(0, 16, 0, 16)
+        }
+
+        layout.addView(tvCurrent)
+        layout.addView(etNewDate)
+        layout.addView(etReason)
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.change_due_date_title))
+            .setView(layout)
+            .setPositiveButton(getString(R.string.btn_save)) { _, _ ->
+                val newDate = etNewDate.text.toString().trim()
+                if (newDate.isBlank()) {
+                    Toast.makeText(this, "Please select a valid date", Toast.LENGTH_SHORT).show()
+                    return@setPositiveButton
+                }
+                val reason = etReason.text.toString().trim().ifEmpty { null }
+                viewModel.updateDebtDueDate(debt.id, newDate, reason) {
+                    Toast.makeText(this, getString(R.string.due_date_updated), Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton(getString(R.string.btn_cancel), null)
+            .show()
+    }
+
+    private fun showRefundExcessDialog(debt: DebtEntity) {
+        val excess = debt.paidAmount - debt.amount
+        if (excess <= 0) return
+
+        val formattedExcess = CurrencyFormatter.formatAmount(this, excess)
+        val isReceivable = debt.type == "RECEIVABLE"
+        val layout = android.widget.LinearLayout(this).apply {
+            orientation = android.widget.LinearLayout.VERTICAL
+            setPadding(40, 20, 40, 20)
+        }
+
+        val tvPrompt = TextView(this).apply {
+            val confirmMsg = if (isReceivable) {
+                getString(R.string.refund_excess_confirm, formattedExcess, debt.personName)
+            } else {
+                getString(R.string.receive_excess_confirm, formattedExcess, debt.personName)
+            }
+            text = confirmMsg
+            textSize = 15f
+            setPadding(0, 0, 0, 16)
+        }
+
+        val spinnerAccounts = Spinner(this).apply {
+            setPadding(0, 16, 0, 16)
+        }
+
+        val etNote = EditText(this).apply {
+            hint = getString(R.string.debt_note_optional)
+        }
+
+        layout.addView(tvPrompt)
+        layout.addView(spinnerAccounts)
+        layout.addView(etNote)
+
+        lifecycleScope.launch {
+            val accounts = viewModel.allAccounts.value.ifEmpty {
+                viewModel.allAccounts.firstOrNull { it.isNotEmpty() } ?: emptyList()
+            }
+            val names = accounts.map { "${it.name} (${CurrencyFormatter.formatAmount(this@MainActivity, it.currentBalance)})" }
+            val adapter = ArrayAdapter(this@MainActivity, R.layout.spinner_item, names)
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            spinnerAccounts.adapter = adapter
+        }
+
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.refund_excess_title))
+            .setView(layout)
+            .setPositiveButton(getString(R.string.btn_confirm)) { _, _ ->
+                lifecycleScope.launch {
+                    val accounts = viewModel.allAccounts.value.ifEmpty {
+                        viewModel.allAccounts.firstOrNull { it.isNotEmpty() } ?: emptyList()
+                    }
+                    val pos = spinnerAccounts.selectedItemPosition
+                    val selectedAcc = if (pos in accounts.indices) accounts[pos] else accounts.firstOrNull()
+                    if (selectedAcc == null) {
+                        Toast.makeText(this@MainActivity, getString(R.string.valid_account_error), Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+
+                    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                    val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+                    val note = etNote.text.toString().trim().ifEmpty { null }
+
+                    viewModel.settleDebtExcess(debt.id, excess, selectedAcc.id, date, time, note) {
+                        Toast.makeText(this@MainActivity, getString(R.string.excess_settled_successfully), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -1702,10 +1884,20 @@ class MainActivity : AppCompatActivity() {
                 .setView(scrollContainer)
                 .setNegativeButton(getString(R.string.btn_ok), null)
 
-            if (outstanding > 0) {
+            val hasExcess = debt.paidAmount > debt.amount
+            if (hasExcess) {
+                val actionBtnText = if (debt.type == "RECEIVABLE") getString(R.string.btn_refund_excess) else getString(R.string.btn_receive_refund)
+                builder.setPositiveButton(actionBtnText) { _, _ ->
+                    showRefundExcessDialog(debt)
+                }
+            } else if (outstanding > 0) {
                 builder.setPositiveButton(getString(R.string.record_repayment)) { _, _ ->
                     showRecordRepaymentDialog(debt)
                 }
+            }
+
+            builder.setNeutralButton(getString(R.string.change_due_date)) { _, _ ->
+                showChangeDueDateDialog(debt)
             }
 
             builder.show()
@@ -2037,10 +2229,10 @@ class MainActivity : AppCompatActivity() {
                     val actualVal = s?.toString()?.trim()?.toLongOrNull()
                     val acc = accounts.getOrNull(spinnerAcc.selectedItemPosition)
                     if (actualVal != null && acc != null) {
-                        val diff = actualVal - acc.currentBalance
+                        val diff = actualVal.toDouble() - acc.currentBalance
                         tvDiscrepancy.visibility = View.VISIBLE
                         val diffStr = CurrencyFormatter.formatAmount(this@MainActivity, diff)
-                        if (diff == 0L) {
+                        if (Math.abs(diff) < 0.001) {
                             tvDiscrepancy.text = getString(R.string.reconcile_match)
                             tvDiscrepancy.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.income))
                         } else {
@@ -2063,10 +2255,10 @@ class MainActivity : AppCompatActivity() {
                     val actual = etActual.text.toString().trim().toLongOrNull() ?: return@setPositiveButton
                     val acc = accounts.getOrNull(spinnerAcc.selectedItemPosition) ?: return@setPositiveButton
                     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-                    val diff = actual - acc.currentBalance
+                    val diff = actual.toDouble() - acc.currentBalance
 
-                    viewModel.recordReconciliation(acc.id, acc.currentBalance, actual, date) {
-                        if (diff != 0L) {
+                    viewModel.recordReconciliation(acc.id, acc.currentBalance.toLong(), actual, date) {
+                        if (Math.abs(diff) > 0.001) {
                             // Offer explicit audit adjustment transaction
                             AlertDialog.Builder(this@MainActivity)
                                 .setTitle(getString(R.string.reconcile_create_adjustment))
@@ -2074,7 +2266,7 @@ class MainActivity : AppCompatActivity() {
                                         "\n\nWould you like to record an audit adjustment transaction so the account balance matches your actual balance?")
                                 .setPositiveButton(getString(R.string.btn_confirm)) { _, _ ->
                                     val adjType = if (diff > 0) "INCOME" else "EXPENSE"
-                                    val adjAmount = Math.abs(diff)
+                                    val adjAmount = Math.round(Math.abs(diff))
                                     val adjTx = TransactionEntity(
                                         type = adjType,
                                         amount = adjAmount,

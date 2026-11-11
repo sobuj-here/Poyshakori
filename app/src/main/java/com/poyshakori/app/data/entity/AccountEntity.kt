@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 data class AccountEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val name: String,               // e.g., Cash, Bank, bKash
-    val type: String = "General",   // e.g., Cash, Bank, Mobile Wallet
-    val openingBalance: Long = 0L,
-    val currentBalance: Long = 0L,   // সঠিক কলাম নাম currentBalance ব্যবহার করা হলো
+    val name: String,
+    val type: String = "General",
+    val openingBalance: Double = 0.0,
+    val currentBalance: Double = 0.0,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
     val active: Boolean = true

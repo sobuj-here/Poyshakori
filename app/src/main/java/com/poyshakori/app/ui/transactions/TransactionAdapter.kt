@@ -64,7 +64,12 @@ class TransactionAdapter(
             val formattedDate = CurrencyFormatter.formatDate(itemView.context, transaction.date)
             val accountInfo = if (transaction.type == "TRANSFER" && transaction.targetAccountId != null) {
                 val targetAccountName = accounts[transaction.targetAccountId] ?: "#${transaction.targetAccountId}"
-                "$sourceAccountName ➔ $targetAccountName • $formattedDate"
+                if (transaction.serviceCharge > 0) {
+                    val formattedFee = CurrencyFormatter.formatAmount(itemView.context, transaction.serviceCharge)
+                    "$sourceAccountName ➔ $targetAccountName • $formattedDate (+ $formattedFee ফি)"
+                } else {
+                    "$sourceAccountName ➔ $targetAccountName • $formattedDate"
+                }
             } else {
                 "$sourceAccountName • $formattedDate"
             }

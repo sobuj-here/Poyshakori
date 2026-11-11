@@ -45,6 +45,12 @@ interface DebtDao {
     @Query("UPDATE debts SET paidAmount = :newPaidAmount, status = :status WHERE id = :id")
     suspend fun updateDebtRepaymentStatus(id: Long, newPaidAmount: Long, status: String)
 
+    @Query("UPDATE debts SET dueDate = :newDueDate WHERE id = :id")
+    suspend fun updateDueDate(id: Long, newDueDate: String)
+
+    @Query("UPDATE debts SET dueDate = :newDueDate, note = :newNote WHERE id = :id")
+    suspend fun updateDueDateAndNote(id: Long, newDueDate: String, newNote: String?)
+
     @Query("SELECT COUNT(*) FROM debts WHERE accountId = :accountId")
     suspend fun getDebtsCountForAccount(accountId: Long): Int
 

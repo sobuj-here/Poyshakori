@@ -1,6 +1,8 @@
 package com.poyshakori.app.util
 
 import android.content.Context
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -52,14 +54,34 @@ object CurrencyFormatter {
         return cleaned.toLongOrNull() ?: cleaned.toDoubleOrNull()?.toLong()
     }
 
-    fun formatAmount(context: Context, amount: Long): String {
+    fun parseAmountDouble(input: String?): Double? {
+        if (input.isNullOrBlank()) return null
+        val cleaned = toAsciiDigits(input.trim())
+            .replace(",", "")
+            .replace("৳", "")
+            .replace("টাকা", "")
+            .replace("tk", "", ignoreCase = true)
+            .replace("bdt", "", ignoreCase = true)
+            .trim()
+        return cleaned.toDoubleOrNull()
+    }
+
+    fun formatAmount(context: Context, amount: Double): String {
         val isBangla = LocaleHelper.getLanguage(context) == LocaleHelper.LANG_BANGLA
-        val formatted = NumberFormat.getNumberInstance(Locale.US).format(amount)
+        val isWhole = (amount % 1.0 == 0.0)
+        val pattern = if (isWhole) "#,##0" else "#,##0.00"
+        val symbols = DecimalFormatSymbols(Locale.US)
+        val df = DecimalFormat(pattern, symbols)
+        val formatted = df.format(amount)
         return if (isBangla) {
             "৳ " + toBanglaDigits(formatted)
         } else {
             "৳ $formatted"
         }
+    }
+
+    fun formatAmount(context: Context, amount: Long): String {
+        return formatAmount(context, amount.toDouble())
     }
 
     fun formatNumber(context: Context, number: Long): String {

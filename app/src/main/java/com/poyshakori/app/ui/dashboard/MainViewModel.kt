@@ -53,7 +53,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val totalExpense: StateFlow<Long?>
     val currentMonthIncome: StateFlow<Long?>
     val currentMonthExpense: StateFlow<Long?>
-    val totalBalance: StateFlow<Long?>
+    val totalBalance: StateFlow<Double?>
     val allAccounts: StateFlow<List<AccountEntity>>
     val allBudgets: StateFlow<List<BudgetEntity>>
     val monthlySummaries: StateFlow<List<MonthlySummary>>
@@ -135,7 +135,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }.stateIn(viewModelScope, SharingStarted.Lazily, 0L)
 
         totalBalance = repository.totalBalance.stateIn(
-            viewModelScope, SharingStarted.Lazily, 0L
+            viewModelScope, SharingStarted.Lazily, 0.0
         )
 
         allAccounts = repository.allAccounts.stateIn(
@@ -382,9 +382,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         date: String,
         time: String,
         note: String? = null,
+        newDueDate: String? = null,
         onSuccess: (() -> Unit)? = null
     ) = viewModelScope.launch {
-        repository.recordDebtRepayment(debtId, amount, accountId, date, time, note)
+        repository.recordDebtRepayment(debtId, amount, accountId, date, time, note, newDueDate)
+        AutoBackupManager.triggerDebouncedBackupOnDataChange(getApplication())
+        onSuccess?.invoke()
+    }
+
+    fun updateDebtDueDate(
+        debtId: Long,
+        newDueDate: String,
+        reason: String? = null,
+        onSuccess: (() -> Unit)? = null
+    ) = viewModelScope.launch {
+        repository.updateDebtDueDate(debtId, newDueDate, reason)
+        AutoBackupManager.triggerDebouncedBackupOnDataChange(getApplication())
+        onSuccess?.invoke()
+    }
+
+    fun settleDebtExcess(
+        debtId: Long,
+        refundAmount: Long,
+        accountId: Long,
+        date: String,
+        time: String,
+        note: String? = null,
+        onSuccess: (() -> Unit)? = null
+    ) = viewModelScope.launch {
+        repository.settleDebtExcess(debtId, refundAmount, accountId, date, time, note)
         AutoBackupManager.triggerDebouncedBackupOnDataChange(getApplication())
         onSuccess?.invoke()
     }

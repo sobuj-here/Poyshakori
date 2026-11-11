@@ -28,7 +28,7 @@ class AccountingLogicTest {
 
     @Test
     fun testIncomeIncreasesAccountBalance() {
-        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 500L)
+        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 500.0)
         val incomeTx = TransactionEntity(
             id = 101L,
             type = "INCOME",
@@ -41,12 +41,12 @@ class AccountingLogicTest {
 
         // Income adds to account
         cashAccount = cashAccount.copy(currentBalance = cashAccount.currentBalance + incomeTx.amount)
-        assertEquals(1700L, cashAccount.currentBalance)
+        assertEquals(1700L, cashAccount.currentBalance.toLong())
     }
 
     @Test
     fun testExpenseDecreasesAccountBalance() {
-        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 1700L)
+        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 1700.0)
         val expenseTx = TransactionEntity(
             id = 102L,
             type = "EXPENSE",
@@ -59,16 +59,16 @@ class AccountingLogicTest {
 
         // Expense subtracts from account
         cashAccount = cashAccount.copy(currentBalance = cashAccount.currentBalance - expenseTx.amount)
-        assertEquals(1350L, cashAccount.currentBalance)
+        assertEquals(1350L, cashAccount.currentBalance.toLong())
     }
 
     @Test
     fun testTransferDecreasesSourceAndIncreasesTargetWithoutAlteringNetWorth() {
-        var bankAccount = AccountEntity(id = 1L, name = "Bank", currentBalance = 10000L)
-        var bkashAccount = AccountEntity(id = 2L, name = "bKash", currentBalance = 500L)
+        var bankAccount = AccountEntity(id = 1L, name = "Bank", currentBalance = 10000.0)
+        var bkashAccount = AccountEntity(id = 2L, name = "bKash", currentBalance = 500.0)
 
         val initialNetWorth = bankAccount.currentBalance + bkashAccount.currentBalance
-        assertEquals(10500L, initialNetWorth)
+        assertEquals(10500L, initialNetWorth.toLong())
 
         val transferTx = TransactionEntity(
             id = 103L,
@@ -86,18 +86,18 @@ class AccountingLogicTest {
         // Target increases by amount
         bkashAccount = bkashAccount.copy(currentBalance = bkashAccount.currentBalance + transferTx.amount)
 
-        assertEquals(8000L, bankAccount.currentBalance)
-        assertEquals(2500L, bkashAccount.currentBalance)
+        assertEquals(8000L, bankAccount.currentBalance.toLong())
+        assertEquals(2500L, bkashAccount.currentBalance.toLong())
 
         val postTransferNetWorth = bankAccount.currentBalance + bkashAccount.currentBalance
         // Crucial Accounting Rule: Transfer does NOT create or destroy money
-        assertEquals(initialNetWorth, postTransferNetWorth)
+        assertEquals(initialNetWorth, postTransferNetWorth, 0.001)
     }
 
     @Test
     fun testDeletingTransactionRollsBackBalances() {
-        var bankAccount = AccountEntity(id = 1L, name = "Bank", currentBalance = 8000L)
-        var bkashAccount = AccountEntity(id = 2L, name = "bKash", currentBalance = 2500L)
+        var bankAccount = AccountEntity(id = 1L, name = "Bank", currentBalance = 8000.0)
+        var bkashAccount = AccountEntity(id = 2L, name = "bKash", currentBalance = 2500.0)
 
         val transferTx = TransactionEntity(
             id = 103L,
@@ -114,8 +114,8 @@ class AccountingLogicTest {
         bankAccount = bankAccount.copy(currentBalance = bankAccount.currentBalance + transferTx.amount)
         bkashAccount = bkashAccount.copy(currentBalance = bkashAccount.currentBalance - transferTx.amount)
 
-        assertEquals(10000L, bankAccount.currentBalance)
-        assertEquals(500L, bkashAccount.currentBalance)
+        assertEquals(10000L, bankAccount.currentBalance.toLong())
+        assertEquals(500L, bkashAccount.currentBalance.toLong())
     }
 
     @Test
@@ -172,7 +172,7 @@ class AccountingLogicTest {
 
     @Test
     fun testDebtRepaymentCashMovementAndOutstanding() {
-        var userCashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 5000L)
+        var userCashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 5000.0)
         var debt = DebtEntity(
             id = 10L,
             type = "DEBT", // User owes uncle 3000 BDT
@@ -189,7 +189,7 @@ class AccountingLogicTest {
             paidAmount = debt.paidAmount + repayment1,
             status = if (debt.paidAmount + repayment1 >= debt.amount) "PAID" else "PARTIALLY_PAID"
         )
-        assertEquals(4000L, userCashAccount.currentBalance)
+        assertEquals(4000L, userCashAccount.currentBalance.toLong())
         assertEquals(2000L, debt.amount - debt.paidAmount)
         assertEquals("PARTIALLY_PAID", debt.status)
 
@@ -200,14 +200,14 @@ class AccountingLogicTest {
             paidAmount = debt.paidAmount + repayment2,
             status = if (debt.paidAmount + repayment2 >= debt.amount) "PAID" else "PARTIALLY_PAID"
         )
-        assertEquals(2000L, userCashAccount.currentBalance)
+        assertEquals(2000L, userCashAccount.currentBalance.toLong())
         assertEquals(0L, debt.amount - debt.paidAmount)
         assertEquals("PAID", debt.status)
     }
 
     @Test
     fun testReceivableRepaymentIncreasesUserCash() {
-        var userCashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 5000L)
+        var userCashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 5000.0)
         var receivable = DebtEntity(
             id = 11L,
             type = "RECEIVABLE", // Friend owes user 1500 BDT
@@ -224,7 +224,7 @@ class AccountingLogicTest {
             paidAmount = receivable.paidAmount + repayment,
             status = "PAID"
         )
-        assertEquals(6500L, userCashAccount.currentBalance)
+        assertEquals(6500L, userCashAccount.currentBalance.toLong())
         assertEquals(0L, receivable.amount - receivable.paidAmount)
         assertEquals("PAID", receivable.status)
     }
@@ -232,7 +232,7 @@ class AccountingLogicTest {
     @Test
     fun testBorrowingIncreasesAccountBalance() {
         // "ami dar nile tk add hobe"
-        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 3000L)
+        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 3000.0)
         val borrowedDebt = DebtEntity(
             id = 12L,
             type = "DEBT",
@@ -245,13 +245,13 @@ class AccountingLogicTest {
         // Borrowing cash enters user's account
         val delta = if (borrowedDebt.type == "DEBT") borrowedDebt.amount else -borrowedDebt.amount
         cashAccount = cashAccount.copy(currentBalance = cashAccount.currentBalance + delta)
-        assertEquals(5000L, cashAccount.currentBalance)
+        assertEquals(5000L, cashAccount.currentBalance.toLong())
     }
 
     @Test
     fun testLendingDecreasesAccountBalance() {
         // "kew tk dar nile seta tk kete jabe"
-        var bankAccount = AccountEntity(id = 2L, name = "Bank", currentBalance = 10000L)
+        var bankAccount = AccountEntity(id = 2L, name = "Bank", currentBalance = 10000.0)
         val lentLoan = DebtEntity(
             id = 13L,
             type = "RECEIVABLE",
@@ -264,12 +264,12 @@ class AccountingLogicTest {
         // Lending cash leaves user's account
         val delta = if (lentLoan.type == "DEBT") lentLoan.amount else -lentLoan.amount
         bankAccount = bankAccount.copy(currentBalance = bankAccount.currentBalance + delta)
-        assertEquals(6000L, bankAccount.currentBalance)
+        assertEquals(6000L, bankAccount.currentBalance.toLong())
     }
 
     @Test
     fun testDebtDeletionRollsBackAccountBalance() {
-        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 5000L)
+        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 5000.0)
         val borrowedDebt = DebtEntity(
             id = 12L,
             type = "DEBT",
@@ -284,7 +284,7 @@ class AccountingLogicTest {
         val remaining = borrowedDebt.amount - borrowedDebt.paidAmount // 1500
         val rollbackDelta = if (borrowedDebt.type == "DEBT") -remaining else remaining
         cashAccount = cashAccount.copy(currentBalance = cashAccount.currentBalance + rollbackDelta)
-        assertEquals(3500L, cashAccount.currentBalance)
+        assertEquals(3500L, cashAccount.currentBalance.toLong())
     }
 
     @Test
@@ -342,7 +342,7 @@ class AccountingLogicTest {
 
     @Test
     fun testSavingsGoalContributionDeductsSourceAccount() {
-        var bankAccount = AccountEntity(id = 1L, name = "Bank", currentBalance = 25000L)
+        var bankAccount = AccountEntity(id = 1L, name = "Bank", currentBalance = 25000.0)
         var goal = SavingsGoalEntity(
             id = 1L,
             title = "New Laptop",
@@ -358,7 +358,7 @@ class AccountingLogicTest {
             status = if (goal.savedAmount + contribution >= goal.targetAmount) "COMPLETED" else "IN_PROGRESS"
         )
 
-        assertEquals(20000L, bankAccount.currentBalance)
+        assertEquals(20000L, bankAccount.currentBalance.toLong())
         assertEquals(25000L, goal.savedAmount)
         assertEquals("IN_PROGRESS", goal.status)
     }
@@ -589,7 +589,7 @@ class AccountingLogicTest {
     fun testLoanAndDebtCompleteAccountingIntegrityWorkflow() {
         // Complete Verification of Scenario from prompt Section 9:
         // Starting cash balance: 2230 BDT
-        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 2230L)
+        var cashAccount = AccountEntity(id = 1L, name = "Cash", currentBalance = 2230.0)
         val transactions = mutableListOf<TransactionEntity>()
 
         fun calculateOrdinaryIncome() = transactions.filter { it.type == "INCOME" }.sumOf { it.amount }
@@ -621,7 +621,7 @@ class AccountingLogicTest {
                 time = "10:00:00"
             )
         )
-        assertEquals(1730L, cashAccount.currentBalance)
+        assertEquals(1730L, cashAccount.currentBalance.toLong())
         assertEquals(500L, receivableDebt.amount - receivableDebt.paidAmount)
         assertEquals(0L, calculateOrdinaryExpense()) // MUST NOT be classified as ordinary expense!
 
@@ -640,7 +640,7 @@ class AccountingLogicTest {
                 time = "11:00:00"
             )
         )
-        assertEquals(1930L, cashAccount.currentBalance)
+        assertEquals(1930L, cashAccount.currentBalance.toLong())
         assertEquals(300L, receivableDebt.amount - receivableDebt.paidAmount)
         assertEquals(0L, calculateOrdinaryIncome()) // Returned principal MUST NOT be classified as ordinary income!
 
@@ -668,7 +668,7 @@ class AccountingLogicTest {
                 time = "14:00:00"
             )
         )
-        assertEquals(2430L, cashAccount.currentBalance)
+        assertEquals(2430L, cashAccount.currentBalance.toLong())
         assertEquals(500L, borrowedDebt.amount - borrowedDebt.paidAmount)
         assertEquals(0L, calculateOrdinaryIncome()) // Borrowed money MUST NOT be classified as ordinary income!
 
@@ -687,7 +687,7 @@ class AccountingLogicTest {
                 time = "16:00:00"
             )
         )
-        assertEquals(2230L, cashAccount.currentBalance)
+        assertEquals(2230L, cashAccount.currentBalance.toLong())
         assertEquals(300L, borrowedDebt.amount - borrowedDebt.paidAmount)
         assertEquals(0L, calculateOrdinaryExpense()) // Loan repayment MUST NOT be classified as ordinary expense!
 
@@ -698,23 +698,23 @@ class AccountingLogicTest {
 
     @Test
     fun testSafeAccountDeletionIntegrityProtection() {
-        val account = AccountEntity(id = 10L, name = "Savings Bank", currentBalance = 5000L)
+        val account = AccountEntity(id = 10L, name = "Savings Bank", currentBalance = 5000.0)
         val activeTxCount = 3
         val activeDebtCount = 1
 
         // Account cannot be deleted if active balance > 0 or dependent transactions/debts exist
         fun canDeleteAccount(acc: AccountEntity, txCount: Int, debtCount: Int): Boolean {
-            if (acc.currentBalance != 0L) return false
+            if (Math.abs(acc.currentBalance) > 0.001) return false
             if (txCount > 0) return false
             if (debtCount > 0) return false
             return true
         }
 
         assertFalse("Account with balance cannot be deleted", canDeleteAccount(account, 0, 0))
-        assertFalse("Account with transactions cannot be deleted", canDeleteAccount(account.copy(currentBalance = 0L), activeTxCount, 0))
-        assertFalse("Account with linked debts cannot be deleted", canDeleteAccount(account.copy(currentBalance = 0L), 0, activeDebtCount))
+        assertFalse("Account with transactions cannot be deleted", canDeleteAccount(account.copy(currentBalance = 0.0), activeTxCount, 0))
+        assertFalse("Account with linked debts cannot be deleted", canDeleteAccount(account.copy(currentBalance = 0.0), 0, activeDebtCount))
 
-        val cleanAccount = account.copy(currentBalance = 0L)
+        val cleanAccount = account.copy(currentBalance = 0.0)
         assertTrue("Zero-balance account with no dependencies can be deleted", canDeleteAccount(cleanAccount, 0, 0))
     }
 
@@ -803,5 +803,136 @@ class AccountingLogicTest {
 
         val allFiltered = filterByType(allTx, "ALL")
         assertEquals(7, allFiltered.size)
+    }
+
+    @Test
+    fun testTransferWithDecimalServiceCharge() {
+        var sourceAcc = AccountEntity(id = 1L, name = "bKash", currentBalance = 1000.0)
+        var targetAcc = AccountEntity(id = 2L, name = "Nagad", currentBalance = 200.0)
+
+        val transferAmount = 500L
+        val serviceCharge = 14.90 // Decimal/Float service charge
+
+        // Source account is deducted: amount + serviceCharge
+        sourceAcc = sourceAcc.copy(currentBalance = sourceAcc.currentBalance - (transferAmount.toDouble() + serviceCharge))
+        // Target account is credited: amount
+        targetAcc = targetAcc.copy(currentBalance = targetAcc.currentBalance + transferAmount.toDouble())
+
+        assertEquals(485.10, sourceAcc.currentBalance, 0.001)
+        assertEquals(700.0, targetAcc.currentBalance, 0.001)
+
+        // Net reduction in total accounts is exactly the service charge
+        val totalAfter = sourceAcc.currentBalance + targetAcc.currentBalance
+        assertEquals(1185.10, totalAfter, 0.001)
+    }
+
+    @Test
+    fun testLoanOverpaymentExcessAndSettlement() {
+        // Debtor owed 1000L, pays 1200L
+        val debt = DebtEntity(
+            id = 50L,
+            personName = "Kamal",
+            amount = 1000L,
+            paidAmount = 0L,
+            dueDate = "2026-11-20",
+            type = "RECEIVABLE"
+        )
+
+        val paidAmt = 1200L
+        val updatedDebt = debt.copy(
+            paidAmount = debt.paidAmount + paidAmt,
+            status = if (debt.paidAmount + paidAmt >= debt.amount) "PAID" else "PARTIALLY_PAID"
+        )
+
+        // Verify excess calculation
+        val hasExcess = updatedDebt.paidAmount > updatedDebt.amount
+        val excess = if (hasExcess) updatedDebt.paidAmount - updatedDebt.amount else 0L
+        assertTrue(hasExcess)
+        assertEquals(200L, excess)
+
+        // Settling excess: refunding 200L back to debtor
+        val refundAmount = 200L
+        val settledPaidAmount = updatedDebt.paidAmount - refundAmount
+        val settledDebt = updatedDebt.copy(
+            paidAmount = settledPaidAmount,
+            status = if (settledPaidAmount == updatedDebt.amount) "PAID" else "PARTIALLY_PAID"
+        )
+
+        assertEquals(1000L, settledDebt.paidAmount)
+        assertEquals(1000L, settledDebt.amount)
+        assertEquals(0L, settledDebt.paidAmount - settledDebt.amount) // 0 excess
+        assertEquals(0L, settledDebt.amount - settledDebt.paidAmount) // 0 remaining
+    }
+
+    @Test
+    fun testZeroBalanceDebtsFilteredFromActiveList() {
+        val activeDebt = DebtEntity(id = 1L, personName = "Rahim", amount = 1000L, paidAmount = 500L, dueDate = "2026-11-20", type = "DEBT")
+        val settledDebt = DebtEntity(id = 2L, personName = "Karim", amount = 2000L, paidAmount = 2000L, dueDate = "2026-11-20", type = "RECEIVABLE")
+        val excessDebt = DebtEntity(id = 3L, personName = "Jamal", amount = 1000L, paidAmount = 1200L, dueDate = "2026-11-20", type = "RECEIVABLE")
+
+        val allDebts = listOf(activeDebt, settledDebt, excessDebt)
+
+        // Filter rule: it.amount != it.paidAmount
+        val activeList = allDebts.filter { it.amount != it.paidAmount }
+
+        // Settled 0-balance loan MUST NOT be in the active Debts & Loans tab
+        assertEquals(2, activeList.size)
+        assertTrue(activeList.contains(activeDebt))
+        assertTrue(activeList.contains(excessDebt))
+        assertFalse(activeList.contains(settledDebt))
+    }
+
+    @Test
+    fun testDebtNotificationThrottlingCooldown() {
+        val minCooldownMs = 4 * 60 * 60 * 1000L // 4 hours
+        val maxPer24h = 3
+        
+        var lastNotified = 0L
+        var windowStart = 0L
+        var count = 0
+
+        fun canNotify(currentTimeMs: Long): Boolean {
+            if (currentTimeMs - lastNotified < minCooldownMs) return false
+            val isNewWindow = (currentTimeMs - windowStart) > (24 * 60 * 60 * 1000L)
+            val currentCount = if (isNewWindow) 0 else count
+            if (currentCount >= maxPer24h) return false
+            return true
+        }
+
+        fun recordNotification(currentTimeMs: Long) {
+            val isNewWindow = (currentTimeMs - windowStart) > (24 * 60 * 60 * 1000L)
+            lastNotified = currentTimeMs
+            windowStart = if (isNewWindow) currentTimeMs else windowStart
+            count = if (isNewWindow) 1 else count + 1
+        }
+
+        val t0 = 1000000000L
+        // 1st alert
+        assertTrue(canNotify(t0))
+        recordNotification(t0)
+
+        // Immediate next app launch 2 minutes later: MUST NOT notify
+        assertFalse(canNotify(t0 + 2 * 60 * 1000L))
+
+        // 3 hours later (still within 4h cooldown): MUST NOT notify
+        assertFalse(canNotify(t0 + 3 * 3600 * 1000L))
+
+        // 4.5 hours later: Allowed!
+        val t1 = t0 + (4.5 * 3600 * 1000L).toLong()
+        assertTrue(canNotify(t1))
+        recordNotification(t1)
+
+        // 9 hours later: Allowed (3rd alert)
+        val t2 = t0 + (9 * 3600 * 1000L).toLong()
+        assertTrue(canNotify(t2))
+        recordNotification(t2)
+
+        // 14 hours later: 3 limit reached in 24h -> MUST NOT notify
+        val t3 = t0 + (14 * 3600 * 1000L).toLong()
+        assertFalse(canNotify(t3))
+
+        // 25 hours later (new 24h window): Allowed again!
+        val t4 = t0 + (25 * 3600 * 1000L).toLong()
+        assertTrue(canNotify(t4))
     }
 }

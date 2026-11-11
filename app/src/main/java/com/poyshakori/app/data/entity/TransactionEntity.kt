@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val type: String,                   // INCOME, EXPENSE, TRANSFER
+    val type: String,                   // INCOME, EXPENSE, TRANSFER, LOAN_LEND, LOAN_BORROW, DEBT_REPAYMENT, RECEIVABLE_REPAYMENT
     val amount: Long,                   // Exact amount in integer units (BDT)
     val accountId: Long,                // Linked source account ID
     val targetAccountId: Long? = null,  // Destination account ID for transfers
@@ -25,6 +25,7 @@ data class TransactionEntity(
     val time: String,                   // Format: HH:mm:ss
     val note: String? = null,           // Optional description / note
     val reference: String? = null,      // Optional reference / receipt #
+    val serviceCharge: Double = 0.0,    // Service fee / charge (supports float, e.g. 18.50 BDT)
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 )

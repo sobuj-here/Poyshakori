@@ -765,7 +765,19 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvDebts"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tvEmptyDebts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_active_debts"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp"
+                    android:padding="24dp"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

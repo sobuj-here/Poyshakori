@@ -45,7 +45,7 @@ class TransactionRepository(
     // Accounts Flow
     val allAccounts: Flow<List<AccountEntity>> = accountDao.getAllAccounts()
     val allAccountsIncludingInactive: Flow<List<AccountEntity>> = accountDao.getAllAccountsIncludingInactive()
-    val totalBalance: Flow<Long?> = accountDao.getTotalBalance()
+    val totalBalance: Flow<Double?> = accountDao.getTotalBalance()
 
     // Debts & Repayments Flow
     val allDebts: Flow<List<DebtEntity>> = debtDao.getAllDebts()
@@ -97,17 +97,18 @@ class TransactionRepository(
 
         when (transaction.type) {
             "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> {
-                accountDao.updateBalance(transaction.accountId, transaction.amount)
+                accountDao.updateBalance(transaction.accountId, transaction.amount.toDouble())
             }
             "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> {
-                accountDao.updateBalance(transaction.accountId, -transaction.amount)
+                accountDao.updateBalance(transaction.accountId, -transaction.amount.toDouble())
             }
             "TRANSFER" -> {
                 val targetId = transaction.targetAccountId
                     ?: throw IllegalArgumentException("Target account ID required for Transfer")
                 require(transaction.accountId != targetId) { "Source and destination accounts must be different" }
-                accountDao.updateBalance(transaction.accountId, -transaction.amount)
-                accountDao.updateBalance(targetId, transaction.amount)
+                val totalDeduction = transaction.amount.toDouble() + transaction.serviceCharge
+                accountDao.updateBalance(transaction.accountId, -totalDeduction)
+                accountDao.updateBalance(targetId, transaction.amount.toDouble())
             }
         }
         insertedId
@@ -119,15 +120,16 @@ class TransactionRepository(
     suspend fun deleteTransaction(transaction: TransactionEntity) = db.withTransaction {
         when (transaction.type) {
             "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> {
-                accountDao.updateBalance(transaction.accountId, -transaction.amount)
+                accountDao.updateBalance(transaction.accountId, -transaction.amount.toDouble())
             }
             "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> {
-                accountDao.updateBalance(transaction.accountId, transaction.amount)
+                accountDao.updateBalance(transaction.accountId, transaction.amount.toDouble())
             }
             "TRANSFER" -> {
-                accountDao.updateBalance(transaction.accountId, transaction.amount)
+                val totalDeduction = transaction.amount.toDouble() + transaction.serviceCharge
+                accountDao.updateBalance(transaction.accountId, totalDeduction)
                 transaction.targetAccountId?.let { targetId ->
-                    accountDao.updateBalance(targetId, -transaction.amount)
+                    accountDao.updateBalance(targetId, -transaction.amount.toDouble())
                 }
             }
         }
@@ -140,24 +142,26 @@ class TransactionRepository(
     suspend fun updateTransaction(newTransaction: TransactionEntity, oldTransaction: TransactionEntity) = db.withTransaction {
         // Rollback old transaction
         when (oldTransaction.type) {
-            "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(oldTransaction.accountId, -oldTransaction.amount)
-            "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(oldTransaction.accountId, oldTransaction.amount)
+            "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(oldTransaction.accountId, -oldTransaction.amount.toDouble())
+            "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(oldTransaction.accountId, oldTransaction.amount.toDouble())
             "TRANSFER" -> {
-                accountDao.updateBalance(oldTransaction.accountId, oldTransaction.amount)
-                oldTransaction.targetAccountId?.let { accountDao.updateBalance(it, -oldTransaction.amount) }
+                val oldDeduction = oldTransaction.amount.toDouble() + oldTransaction.serviceCharge
+                accountDao.updateBalance(oldTransaction.accountId, oldDeduction)
+                oldTransaction.targetAccountId?.let { accountDao.updateBalance(it, -oldTransaction.amount.toDouble()) }
             }
         }
 
         // Apply new transaction
         when (newTransaction.type) {
-            "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(newTransaction.accountId, newTransaction.amount)
-            "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(newTransaction.accountId, -newTransaction.amount)
+            "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(newTransaction.accountId, newTransaction.amount.toDouble())
+            "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(newTransaction.accountId, -newTransaction.amount.toDouble())
             "TRANSFER" -> {
                 val targetId = newTransaction.targetAccountId
                     ?: throw IllegalArgumentException("Target account ID required for Transfer")
                 require(newTransaction.accountId != targetId) { "Source and target accounts must be different" }
-                accountDao.updateBalance(newTransaction.accountId, -newTransaction.amount)
-                accountDao.updateBalance(targetId, newTransaction.amount)
+                val newDeduction = newTransaction.amount.toDouble() + newTransaction.serviceCharge
+                accountDao.updateBalance(newTransaction.accountId, -newDeduction)
+                accountDao.updateBalance(targetId, newTransaction.amount.toDouble())
             }
         }
 
@@ -200,7 +204,7 @@ class TransactionRepository(
             val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
             val tx = TransactionEntity(
                 type = "INCOME",
-                amount = account.openingBalance,
+                amount = account.openingBalance.toLong(),
                 accountId = accountId,
                 category = "Opening Balance",
                 paymentMethod = account.name,
@@ -345,7 +349,7 @@ class TransactionRepository(
                 // DEBT (I borrow money): money enters user's account (+amount)
                 // RECEIVABLE (someone borrows money from user): money leaves user's account (-amount)
                 val delta = if (debt.type == "DEBT") debt.amount else -debt.amount
-                accountDao.updateBalance(accId, delta)
+                accountDao.updateBalance(accId, delta.toDouble())
             }
         }
         debtId
@@ -364,7 +368,7 @@ class TransactionRepository(
                 val remaining = debt.amount - debt.paidAmount
                 if (remaining > 0) {
                     val delta = if (debt.type == "DEBT") -remaining else remaining
-                    accountDao.updateBalance(accId, delta)
+                    accountDao.updateBalance(accId, delta.toDouble())
                 }
             }
         }
@@ -380,20 +384,23 @@ class TransactionRepository(
         accountId: Long,
         date: String,
         time: String,
-        note: String? = null
+        note: String? = null,
+        newDueDate: String? = null
     ) = db.withTransaction {
         require(repaymentAmount > 0) { "Repayment amount must be positive" }
         val debt = debtDao.getDebtById(debtId)
             ?: throw IllegalArgumentException("Debt with ID $debtId not found")
-
-        val remaining = debt.amount - debt.paidAmount
-        require(repaymentAmount <= remaining) { "Repayment amount ($repaymentAmount) exceeds outstanding balance ($remaining)" }
 
         val newPaidAmount = debt.paidAmount + repaymentAmount
         val newStatus = if (newPaidAmount >= debt.amount) "PAID" else "PARTIALLY_PAID"
 
         // Update debt record
         debtDao.updateDebtRepaymentStatus(debtId, newPaidAmount, newStatus)
+
+        // Update due date if user scheduled a new promise date for remaining debt
+        if (!newDueDate.isNullOrBlank() && newPaidAmount < debt.amount) {
+            debtDao.updateDueDate(debtId, newDueDate)
+        }
 
         // Insert repayment audit record
         val repaymentId = debtRepaymentDao.insertRepayment(
@@ -407,14 +414,15 @@ class TransactionRepository(
             )
         )
 
-        // Insert corresponding transaction so it appears in the Transactions tab
-        // DEBT_REPAYMENT: User repays borrowed principal (Cash decreases, liability decreases, NOT an expense)
-        // RECEIVABLE_REPAYMENT: Counterparty repays user (Cash increases, receivable decreases, NOT income)
         val isDebt = debt.type == "DEBT"
         val txType = if (isDebt) "DEBT_REPAYMENT" else "RECEIVABLE_REPAYMENT"
         val catName = if (isDebt) "Loan Repayment" else "Repayment Received"
         val noteText = if (isDebt) "Debt repayment to ${debt.personName}" else "Repayment received from ${debt.personName}"
-        val finalNote = if (!note.isNullOrBlank()) "$noteText ($note)" else noteText
+        val excess = newPaidAmount - debt.amount
+        val excessNote = if (excess > 0) {
+            if (isDebt) " (অতিরিক্ত প্রদান: ৳ $excess - ফেরতযোগ্য)" else " (অতিরিক্ত প্রাপ্তি: ৳ $excess - সে ফেরত পাবে)"
+        } else ""
+        val finalNote = if (!note.isNullOrBlank()) "$noteText$excessNote ($note)" else "$noteText$excessNote"
         val accountName = accountDao.getAccountById(accountId)?.name ?: "Cash"
 
         val tx = TransactionEntity(
@@ -430,14 +438,66 @@ class TransactionRepository(
         )
         transactionDao.insertTransaction(tx)
 
-        // Cash Movement:
-        // DEBT: User owes someone money. Repaying means money leaves user's account (-repaymentAmount)
-        // RECEIVABLE: Someone owes user. Repaying means money enters user's account (+repaymentAmount)
+        // Cash Movement
         if (isDebt) {
-            accountDao.updateBalance(accountId, -repaymentAmount)
+            accountDao.updateBalance(accountId, -repaymentAmount.toDouble())
         } else {
-            accountDao.updateBalance(accountId, repaymentAmount)
+            accountDao.updateBalance(accountId, repaymentAmount.toDouble())
         }
+    }
+
+    suspend fun updateDebtDueDate(debtId: Long, newDueDate: String, reason: String? = null) = db.withTransaction {
+        val debt = debtDao.getDebtById(debtId) ?: return@withTransaction
+        val updatedNote = if (reason.isNullOrBlank()) debt.note else {
+            if (debt.note.isNullOrBlank()) "তারিখ পরিবর্তন: $newDueDate ($reason)" else "${debt.note} | তারিখ পরিবর্তন: $newDueDate ($reason)"
+        }
+        debtDao.updateDueDateAndNote(debtId, newDueDate, updatedNote)
+    }
+
+    suspend fun settleDebtExcess(
+        debtId: Long,
+        refundAmount: Long,
+        accountId: Long,
+        date: String,
+        time: String,
+        note: String? = null
+    ) = db.withTransaction {
+        require(refundAmount > 0) { "Refund amount must be positive" }
+        val debt = debtDao.getDebtById(debtId)
+            ?: throw IllegalArgumentException("Debt with ID $debtId not found")
+
+        val excess = debt.paidAmount - debt.amount
+        require(refundAmount <= excess) { "Refund amount cannot exceed excess balance" }
+
+        val newPaidAmount = debt.paidAmount - refundAmount
+        val newStatus = if (newPaidAmount == debt.amount) "PAID" else "PARTIALLY_PAID"
+        debtDao.updateDebtRepaymentStatus(debtId, newPaidAmount, newStatus)
+
+        val isDebt = debt.type == "DEBT"
+        if (isDebt) {
+            accountDao.updateBalance(accountId, refundAmount.toDouble())
+        } else {
+            accountDao.updateBalance(accountId, -refundAmount.toDouble())
+        }
+
+        val txType = if (isDebt) "RECEIVABLE_REPAYMENT" else "DEBT_REPAYMENT"
+        val catName = if (isDebt) "Repayment Received" else "Loan Repayment"
+        val desc = if (isDebt) "অতিরিক্ত টাকা ফেরত গ্রহণ: ${debt.personName}" else "অতিরিক্ত টাকা ফেরত প্রদান: ${debt.personName}"
+        val finalNote = if (!note.isNullOrBlank()) "$desc ($note)" else desc
+        val accountName = accountDao.getAccountById(accountId)?.name ?: "Cash"
+
+        val tx = TransactionEntity(
+            type = txType,
+            amount = refundAmount,
+            accountId = accountId,
+            category = catName,
+            paymentMethod = accountName,
+            date = date,
+            time = time,
+            note = finalNote,
+            reference = "DEBT_EXCESS_SETTLEMENT:$debtId"
+        )
+        transactionDao.insertTransaction(tx)
     }
 
     fun getRepaymentsForDebt(debtId: Long): Flow<List<DebtRepaymentEntity>> {
@@ -471,7 +531,7 @@ class TransactionRepository(
         val goal = requireNotNull(savingsGoalDao.getGoalById(goalId)) { "Savings goal with ID $goalId not found" }
 
         // Deduct money from source account
-        accountDao.updateBalance(accountId, -amount)
+        accountDao.updateBalance(accountId, -amount.toDouble())
 
         // Add to savings goal
         savingsGoalDao.addContribution(goalId, amount)
@@ -655,11 +715,11 @@ class TransactionRepository(
         transactionDao.deleteTransaction(transaction)
 
         when (transaction.type) {
-            "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(transaction.accountId, -transaction.amount)
-            "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(transaction.accountId, transaction.amount)
+            "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(transaction.accountId, -transaction.amount.toDouble())
+            "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(transaction.accountId, transaction.amount.toDouble())
             "TRANSFER" -> {
-                accountDao.updateBalance(transaction.accountId, transaction.amount)
-                transaction.targetAccountId?.let { accountDao.updateBalance(it, -transaction.amount) }
+                accountDao.updateBalance(transaction.accountId, transaction.amount.toDouble())
+                transaction.targetAccountId?.let { accountDao.updateBalance(it, -transaction.amount.toDouble()) }
             }
             else -> {}
         }
@@ -702,7 +762,7 @@ class TransactionRepository(
         debt.accountId?.let { accId ->
             if (accId > 0 && outstanding > 0) {
                 val delta = if (debt.type == "DEBT") -outstanding else outstanding
-                accountDao.updateBalance(accId, delta)
+                accountDao.updateBalance(accId, delta.toDouble())
             }
         }
     }
@@ -759,11 +819,11 @@ class TransactionRepository(
                 transactionDao.insertTransaction(tx)
 
                 when (tx.type) {
-                    "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(tx.accountId, tx.amount)
-                    "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(tx.accountId, -tx.amount)
+                    "INCOME", "LOAN_BORROW", "RECEIVABLE_REPAYMENT" -> accountDao.updateBalance(tx.accountId, tx.amount.toDouble())
+                    "EXPENSE", "LOAN_LEND", "DEBT_REPAYMENT" -> accountDao.updateBalance(tx.accountId, -tx.amount.toDouble())
                     "TRANSFER" -> {
-                        accountDao.updateBalance(tx.accountId, -tx.amount)
-                        tx.targetAccountId?.let { accountDao.updateBalance(it, tx.amount) }
+                        accountDao.updateBalance(tx.accountId, -tx.amount.toDouble())
+                        tx.targetAccountId?.let { accountDao.updateBalance(it, tx.amount.toDouble()) }
                     }
                     else -> {}
                 }
@@ -790,7 +850,7 @@ class TransactionRepository(
                     val remaining = debt.amount - debt.paidAmount
                     if (remaining > 0) {
                         val delta = if (debt.type == "DEBT") remaining else -remaining
-                        accountDao.updateBalance(debt.accountId, delta)
+                        accountDao.updateBalance(debt.accountId, delta.toDouble())
                     }
                 }
             }

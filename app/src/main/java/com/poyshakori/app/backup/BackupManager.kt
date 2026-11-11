@@ -436,6 +436,7 @@ object BackupManager {
                     `time` TEXT NOT NULL,
                     `note` TEXT,
                     `reference` TEXT,
+                    `serviceCharge` REAL NOT NULL DEFAULT 0.0,
                     `createdAt` INTEGER NOT NULL,
                     `updatedAt` INTEGER NOT NULL
                 )
@@ -448,6 +449,7 @@ object BackupManager {
                     `type` TEXT NOT NULL,
                     `openingBalance` INTEGER NOT NULL,
                     `currentBalance` INTEGER NOT NULL,
+                    `serviceCharge` REAL NOT NULL DEFAULT 0.0,
                     `createdAt` INTEGER NOT NULL,
                     `updatedAt` INTEGER NOT NULL,
                     `active` INTEGER NOT NULL
@@ -602,6 +604,7 @@ object BackupManager {
             safeAddColumn(db, "transactions", "paymentMethod TEXT NOT NULL DEFAULT 'Cash'")
             safeAddColumn(db, "transactions", "createdAt INTEGER NOT NULL DEFAULT 0")
             safeAddColumn(db, "transactions", "updatedAt INTEGER NOT NULL DEFAULT 0")
+            safeAddColumn(db, "transactions", "serviceCharge REAL NOT NULL DEFAULT 0.0")
             safeAddColumn(db, "recurring_transactions", "targetAccountId INTEGER DEFAULT NULL")
             safeAddColumn(db, "recurring_transactions", "autoRecord INTEGER NOT NULL DEFAULT 0")
             safeAddColumn(db, "recurring_transactions", "lastRecordedDate TEXT DEFAULT NULL")

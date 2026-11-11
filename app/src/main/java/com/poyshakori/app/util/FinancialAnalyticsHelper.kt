@@ -39,7 +39,7 @@ object FinancialAnalyticsHelper {
         recurringItems: List<RecurringTransactionEntity>,
         daysAhead: Int
     ): CashFlowForecast {
-        val currentBalance = accounts.sumOf { it.currentBalance }
+        val currentBalance = accounts.sumOf { it.currentBalance }.toLong()
 
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val cal = Calendar.getInstance()

@@ -19,12 +19,13 @@ import java.util.Locale
 class DebtAdapter(
     private val onItemClick: ((DebtEntity) -> Unit)? = null,
     private val onRecordRepaymentClick: ((DebtEntity) -> Unit)? = null,
+    private val onRefundExcessClick: ((DebtEntity) -> Unit)? = null,
     private val onItemLongClick: ((DebtEntity) -> Unit)? = null
 ) : ListAdapter<DebtEntity, DebtAdapter.DebtViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DebtViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_debt, parent, false)
-        return DebtViewHolder(view, onItemClick, onRecordRepaymentClick, onItemLongClick)
+        return DebtViewHolder(view, onItemClick, onRecordRepaymentClick, onRefundExcessClick, onItemLongClick)
     }
 
     override fun onBindViewHolder(holder: DebtViewHolder, position: Int) {
@@ -35,6 +36,7 @@ class DebtAdapter(
         itemView: View,
         private val onItemClick: ((DebtEntity) -> Unit)?,
         private val onRecordRepaymentClick: ((DebtEntity) -> Unit)?,
+        private val onRefundExcessClick: ((DebtEntity) -> Unit)?,
         private val onItemLongClick: ((DebtEntity) -> Unit)?
     ) : RecyclerView.ViewHolder(itemView) {
         private val tvDebtDirection: TextView = itemView.findViewById(R.id.tvDebtDirection)
@@ -50,27 +52,50 @@ class DebtAdapter(
         fun bind(debt: DebtEntity) {
             val context = itemView.context
             val isReceivable = debt.type == "RECEIVABLE"
+            val hasExcess = debt.paidAmount > debt.amount
+            val excess = if (hasExcess) debt.paidAmount - debt.amount else 0L
+            val outstanding = debt.amount - debt.paidAmount
 
-            if (isReceivable) {
-                tvDebtDirection.text = context.getString(R.string.debt_type_owed_to_me)
-                tvDebtDirection.setTextColor(ContextCompat.getColor(context, R.color.income))
-                tvDebtDirection.backgroundTintList = ContextCompat.getColorStateList(context, R.color.income_bg)
-                tvAmount.setTextColor(ContextCompat.getColor(context, R.color.income))
+            if (hasExcess) {
+                // Excess Payment: Debtor overpaid -> "সে ফেরত পাবে" / User overpaid -> "আপনি ফেরত পাবেন"
+                if (isReceivable) {
+                    tvDebtDirection.text = context.getString(R.string.badge_he_will_get_back)
+                    tvDebtDirection.setTextColor(ContextCompat.getColor(context, R.color.expense))
+                    tvDebtDirection.backgroundTintList = ContextCompat.getColorStateList(context, R.color.expense_bg)
+                    tvAmount.setTextColor(ContextCompat.getColor(context, R.color.expense))
+                } else {
+                    tvDebtDirection.text = context.getString(R.string.badge_you_will_get_back)
+                    tvDebtDirection.setTextColor(ContextCompat.getColor(context, R.color.income))
+                    tvDebtDirection.backgroundTintList = ContextCompat.getColorStateList(context, R.color.income_bg)
+                    tvAmount.setTextColor(ContextCompat.getColor(context, R.color.income))
+                }
+                tvAmount.text = CurrencyFormatter.formatAmount(context, excess)
             } else {
-                tvDebtDirection.text = context.getString(R.string.debt_type_owe)
-                tvDebtDirection.setTextColor(ContextCompat.getColor(context, R.color.expense))
-                tvDebtDirection.backgroundTintList = ContextCompat.getColorStateList(context, R.color.expense_bg)
-                tvAmount.setTextColor(ContextCompat.getColor(context, R.color.expense))
+                // Standard Debt/Receivable
+                if (isReceivable) {
+                    tvDebtDirection.text = context.getString(R.string.debt_type_owed_to_me)
+                    tvDebtDirection.setTextColor(ContextCompat.getColor(context, R.color.income))
+                    tvDebtDirection.backgroundTintList = ContextCompat.getColorStateList(context, R.color.income_bg)
+                    tvAmount.setTextColor(ContextCompat.getColor(context, R.color.income))
+                } else {
+                    tvDebtDirection.text = context.getString(R.string.debt_type_owe)
+                    tvDebtDirection.setTextColor(ContextCompat.getColor(context, R.color.expense))
+                    tvDebtDirection.backgroundTintList = ContextCompat.getColorStateList(context, R.color.expense_bg)
+                    tvAmount.setTextColor(ContextCompat.getColor(context, R.color.expense))
+                }
+                tvAmount.text = CurrencyFormatter.formatAmount(context, outstanding)
             }
 
             tvPersonName.text = debt.personName
 
-            val outstanding = debt.amount - debt.paidAmount
-            tvAmount.text = CurrencyFormatter.formatAmount(context, outstanding)
-
             val principalStr = CurrencyFormatter.formatAmount(context, debt.amount)
             val paidStr = CurrencyFormatter.formatAmount(context, debt.paidAmount)
-            tvDebtPrincipalSub.text = context.getString(R.string.debt_principal_sub, principalStr, paidStr)
+            if (hasExcess) {
+                val excessStr = CurrencyFormatter.formatAmount(context, excess)
+                tvDebtPrincipalSub.text = "${context.getString(R.string.debt_principal_sub, principalStr, paidStr)} • ${context.getString(R.string.excess_note_label, excessStr)}"
+            } else {
+                tvDebtPrincipalSub.text = context.getString(R.string.debt_principal_sub, principalStr, paidStr)
+            }
 
             val origDateStr = if (debt.date.isNotBlank()) {
                 context.getString(R.string.debt_start_date, CurrencyFormatter.formatDate(context, debt.date))
@@ -103,6 +128,11 @@ class DebtAdapter(
             val isOverdue = debt.status != "PAID" && debt.dueDate.isNotBlank() && debt.dueDate < today
 
             val (statusText, statusTextColor, statusBgColor) = when {
+                hasExcess -> Triple(
+                    context.getString(R.string.status_excess_paid),
+                    R.color.expense,
+                    R.color.expense_bg
+                )
                 debt.status == "PAID" || outstanding <= 0 -> Triple(
                     context.getString(R.string.status_paid),
                     R.color.income,
@@ -129,7 +159,17 @@ class DebtAdapter(
             tvDebtStatus.setTextColor(ContextCompat.getColor(context, statusTextColor))
             tvDebtStatus.backgroundTintList = ContextCompat.getColorStateList(context, statusBgColor)
 
-            if (debt.status == "PAID" || outstanding <= 0) {
+            if (hasExcess) {
+                btnMarkPaid.visibility = View.VISIBLE
+                btnMarkPaid.text = if (isReceivable) {
+                    context.getString(R.string.btn_refund_excess)
+                } else {
+                    context.getString(R.string.btn_receive_refund)
+                }
+                btnMarkPaid.setOnClickListener {
+                    onRefundExcessClick?.invoke(debt)
+                }
+            } else if (debt.status == "PAID" || outstanding <= 0) {
                 btnMarkPaid.visibility = View.GONE
             } else {
                 btnMarkPaid.visibility = View.VISIBLE

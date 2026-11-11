@@ -37,13 +37,21 @@ interface AccountDao {
     suspend fun getAccountByName(name: String): AccountEntity?
 
     @Query("SELECT SUM(currentBalance) FROM accounts WHERE active = 1")
-    fun getTotalBalance(): Flow<Long?>
+    fun getTotalBalance(): Flow<Double?>
 
     @Query("UPDATE accounts SET currentBalance = currentBalance + :amount, updatedAt = :updatedAt WHERE id = :accountId")
-    suspend fun updateBalance(accountId: Long, amount: Long, updatedAt: Long = System.currentTimeMillis())
+    suspend fun updateBalance(accountId: Long, amount: Double, updatedAt: Long = System.currentTimeMillis())
+
+    suspend fun updateBalance(accountId: Long, amount: Long, updatedAt: Long = System.currentTimeMillis()) {
+        updateBalance(accountId, amount.toDouble(), updatedAt)
+    }
 
     @Query("UPDATE accounts SET currentBalance = :balance, updatedAt = :updatedAt WHERE id = :accountId")
-    suspend fun setAccountBalance(accountId: Long, balance: Long, updatedAt: Long = System.currentTimeMillis())
+    suspend fun setAccountBalance(accountId: Long, balance: Double, updatedAt: Long = System.currentTimeMillis())
+
+    suspend fun setAccountBalance(accountId: Long, balance: Long, updatedAt: Long = System.currentTimeMillis()) {
+        setAccountBalance(accountId, balance.toDouble(), updatedAt)
+    }
 
     @Query("DELETE FROM accounts")
     suspend fun deleteAllAccounts()

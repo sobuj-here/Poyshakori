@@ -57,11 +57,11 @@ class PoyshakoriApp : Application() {
     private suspend fun seedDefaultAccounts() {
         val accountDao = database.accountDao()
         val defaultAccounts = listOf(
-            AccountEntity(name = "Cash", type = "Cash", currentBalance = 0L),
-            AccountEntity(name = "Bank", type = "Bank", currentBalance = 0L),
-            AccountEntity(name = "bKash", type = "Mobile Wallet", currentBalance = 0L),
-            AccountEntity(name = "Nagad", type = "Mobile Wallet", currentBalance = 0L),
-            AccountEntity(name = "Rocket", type = "Mobile Wallet", currentBalance = 0L)
+            AccountEntity(name = "Cash", type = "Cash", currentBalance = 0.0),
+            AccountEntity(name = "Bank", type = "Bank", currentBalance = 0.0),
+            AccountEntity(name = "bKash", type = "Mobile Wallet", currentBalance = 0.0),
+            AccountEntity(name = "Nagad", type = "Mobile Wallet", currentBalance = 0.0),
+            AccountEntity(name = "Rocket", type = "Mobile Wallet", currentBalance = 0.0)
         )
 
         for (account in defaultAccounts) {

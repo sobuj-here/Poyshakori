@@ -44,7 +44,7 @@ import com.poyshakori.app.data.entity.TransactionEntity
         BackupLogEntity::class,
         com.poyshakori.app.data.entity.RecycleBinEntity::class
     ],
-    version = 12,
+    version = 13,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -200,15 +200,26 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        val MIGRATION_UNIVERSAL: Array<Migration> = (1..11).map { fromVersion ->
-            object : Migration(fromVersion, 12) {
+        val MIGRATION_12_13 = object : Migration(12, 13) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                try {
+                    db.execSQL("ALTER TABLE transactions ADD COLUMN serviceCharge REAL NOT NULL DEFAULT 0.0")
+                } catch (_: Exception) {}
+            }
+        }
+
+        val MIGRATION_UNIVERSAL: Array<Migration> = (1..12).map { fromVersion ->
+            object : Migration(fromVersion, 13) {
                 override fun migrate(db: SupportSQLiteDatabase) {
-                    applySchemaUpdatesUpTo12(db)
+                    applySchemaUpdatesUpTo13(db)
                 }
             } as Migration
         }.toTypedArray()
 
-        private fun applySchemaUpdatesUpTo12(db: SupportSQLiteDatabase) {
+        private fun applySchemaUpdatesUpTo13(db: SupportSQLiteDatabase) {
+            try {
+                db.execSQL("ALTER TABLE transactions ADD COLUMN serviceCharge REAL NOT NULL DEFAULT 0.0")
+            } catch (_: Exception) {}
             try {
                 db.execSQL("ALTER TABLE budgets ADD COLUMN rollover INTEGER NOT NULL DEFAULT 0")
             } catch (_: Exception) {}
@@ -384,7 +395,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "poyshakori_db"
                 )
-                .addMigrations(MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, *MIGRATION_UNIVERSAL)
+                .addMigrations(MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12, MIGRATION_12_13, *MIGRATION_UNIVERSAL)
                 .fallbackToDestructiveMigrationOnDowngrade()
                 .build()
                 INSTANCE = instance
